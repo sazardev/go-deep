@@ -1,3 +1,4 @@
+
 # 📚 Estructura Completa del Curso Go Deep
 
 ## 🎓 Niveles de Aprendizaje
@@ -6,23 +7,92 @@
 - Tiempo estimado: 4-6 semanas
 - Prerequisitos: Conocimientos básicos de programación
 
+#### Módulos:
+1. Introducción a Go y Filosofía
+2. Instalación y Setup
+3. Sintaxis Básica
+4. Tipos de Datos
+5. Variables y Constantes
+6. Operadores
+7. Control de Flujo (if, switch, for, range)
+8. Funciones
+9. Arrays y Slices
+10. Maps
+11. Structs
+12. Métodos
+13. Interfaces Básicas
+14. Paquetes y Modularidad
+15. Manejo de Errores
+16. Ejercicios y Proyecto Final
+
 ### 🌿 **Nivel 2: Intermedio (Mid-Level)**
 - Tiempo estimado: 6-8 semanas
 - Prerequisitos: Completar Nivel 1
+
+#### Módulos:
+1. Interfaces Avanzadas
+2. Composition y Embedding
+3. Goroutine, s y Concurrencia
+4. Channels
+5. Select Statement
+6. Mutex y Sync
+7. Context
+8. Testing
+9. Benchmarking
+10. Reflection
+11. JSON Marshaling/Unmarshaling
+12. HTTP Client/Server
+13. Database SQL
+14. Middleware
+15. Dependency Injection
+16. Proyecto Intermedio
 
 ### 🌳 **Nivel 3: Avanzado (Senior)**
 - Tiempo estimado: 8-12 semanas
 - Prerequisitos: Completar Nivel 2
 
+#### Módulos:
+1. Performance Optimization
+2. Memory Management
+3. Profiling y Debugging
+4. Design Patterns
+5. Architecture Patterns
+6. Microservices
+7. gRPC
+8. Message Queues
+9. Caching Strategies
+10. Security
+11. Monitoring y Observability
+12. Deployment
+13. CLI Tools
+14. Code Generation
+15. Proyecto Senior
+
 ### 🚀 **Nivel 4: Expert+ (Staff/Principal)**
 - Tiempo estimado: 12+ semanas
 - Prerequisitos: Completar Nivel 3
+
+#### Módulos:
+1. Compiler Internals
+2. Garbage Collector
+3. Assembly Optimization
+4. Distributed Systems
+5. Consensus Algorithms
+6. Load Balancing
+7. Circuit Breakers
+8. Event Sourcing
+9. CQRS
+10. Kubernetes Operators
+11. Custom Runtime
+12. Contributing to Go
+13. Technical Leadership
+14. Proyecto Expert+
 
 ---
 
 ## 📁 Estructura de Directorios
 
-```
+```text
 go-deep/
 ├── README.md
 ├── ESTRUCTURA_COMPLETA.md

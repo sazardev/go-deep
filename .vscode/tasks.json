@@ -1,0 +1,19 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Go Deep: Ejecutar Hello World",
+			"type": "shell",
+			"command": "cd 01-fundamentos/03-sintaxis-basica/ejercicios && go run syntax_practice_solution.go",
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": [],
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			}
+		}
+	]
+}

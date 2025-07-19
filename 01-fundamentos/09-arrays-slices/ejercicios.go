@@ -11,6 +11,7 @@ import (
 	"math"
 	"math/rand"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -337,21 +338,106 @@ func (a *AnalizadorTendencias) EncontrarPicos() []int {
 
 // 10.1 - Implementa algoritmo de búsqueda de patrón KMP (Knuth-Morris-Pratt)
 func buscarPatronKMP(texto, patron string) []int {
-	// TODO: Encontrar todas las ocurrencias del patrón en el texto
-	// Usar algoritmo KMP para eficiencia O(n+m)
-	return nil
+	if len(patron) == 0 {
+		return []int{}
+	}
+
+	lps := construirTablaLPS(patron)
+	var indices []int
+
+	i, j := 0, 0 // i para texto, j para patrón
+
+	for i < len(texto) {
+		if patron[j] == texto[i] {
+			i++
+			j++
+		}
+
+		if j == len(patron) {
+			indices = append(indices, i-j)
+			j = lps[j-1]
+		} else if i < len(texto) && patron[j] != texto[i] {
+			if j != 0 {
+				j = lps[j-1]
+			} else {
+				i++
+			}
+		}
+	}
+
+	return indices
 }
 
 // Función auxiliar para KMP
 func construirTablaLPS(patron string) []int {
-	// TODO: Construir tabla de Longest Proper Prefix que es también Suffix
-	return nil
+	lps := make([]int, len(patron))
+	longitud := 0
+	i := 1
+
+	for i < len(patron) {
+		if patron[i] == patron[longitud] {
+			longitud++
+			lps[i] = longitud
+			i++
+		} else {
+			if longitud != 0 {
+				longitud = lps[longitud-1]
+			} else {
+				lps[i] = 0
+				i++
+			}
+		}
+	}
+
+	return lps
 }
 
 // 10.2 - Implementa algoritmo para encontrar la subsecuencia común más larga
 func subsecuenciaComunMasLarga(s1, s2 string) string {
-	// TODO: Encontrar LCS usando programación dinámica
-	return ""
+	m, n := len(s1), len(s2)
+
+	// Crear tabla DP
+	dp := make([][]int, m+1)
+	for i := range dp {
+		dp[i] = make([]int, n+1)
+	}
+
+	// Llenar tabla DP
+	for i := 1; i <= m; i++ {
+		for j := 1; j <= n; j++ {
+			if s1[i-1] == s2[j-1] {
+				dp[i][j] = dp[i-1][j-1] + 1
+			} else {
+				dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+			}
+		}
+	}
+
+	// Reconstruir LCS
+	var lcs []byte
+	i, j := m, n
+
+	for i > 0 && j > 0 {
+		if s1[i-1] == s2[j-1] {
+			lcs = append([]byte{s1[i-1]}, lcs...)
+			i--
+			j--
+		} else if dp[i-1][j] > dp[i][j-1] {
+			i--
+		} else {
+			j--
+		}
+	}
+
+	return string(lcs)
+}
+
+// Función auxiliar para encontrar el máximo
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
 }
 
 // ===== FUNCIONES DE DEMOSTRACIÓN =====
@@ -462,6 +548,89 @@ func demostrarEjercicios() {
 	fmt.Printf("Bin más frecuente: %d\n", hist.BinMasFrecuente())
 
 	fmt.Println("\n✅ Demo completada. Implementa las funciones para ver resultados reales.")
+
+	// Demo específica del Ejercicio 10
+	demoEjercicio10()
+}
+
+// ===== DEMOSTRACIÓN ESPECÍFICA DEL EJERCICIO 10 =====
+func demoEjercicio10() {
+	fmt.Println("\n🔟 EJERCICIO 10: ALGORITMOS DE CADENAS CON SLICES")
+	fmt.Println("===============================================")
+
+	// Demo 10.1: Algoritmo KMP
+	fmt.Println("\n📍 10.1 - Búsqueda de Patrón KMP:")
+	texto := "ABABDABACDABABCABCABCABCABC"
+	patron := "ABCABC"
+
+	fmt.Printf("Texto: %s\n", texto)
+	fmt.Printf("Patrón: %s\n", patron)
+
+	// Construir tabla LPS
+	lps := construirTablaLPS(patron)
+	fmt.Printf("Tabla LPS para '%s': %v\n", patron, lps)
+
+	// Buscar ocurrencias
+	ocurrencias := buscarPatronKMP(texto, patron)
+	fmt.Printf("Ocurrencias encontradas en posiciones: %v\n", ocurrencias)
+
+	// Mostrar ocurrencias visualmente
+	for _, pos := range ocurrencias {
+		fmt.Printf("Posición %d: %s[%s]%s\n",
+			pos,
+			texto[:pos],
+			texto[pos:pos+len(patron)],
+			texto[pos+len(patron):])
+	}
+
+	// Demo 10.2: Subsecuencia Común Más Larga (LCS)
+	fmt.Println("\n🧬 10.2 - Subsecuencia Común Más Larga:")
+	s1 := "ABCDGH"
+	s2 := "AEDFHR"
+
+	fmt.Printf("Cadena 1: %s\n", s1)
+	fmt.Printf("Cadena 2: %s\n", s2)
+
+	lcs := subsecuenciaComunMasLarga(s1, s2)
+	fmt.Printf("LCS: '%s' (longitud: %d)\n", lcs, len(lcs))
+
+	// Ejemplos adicionales más complejos
+	fmt.Println("\n📚 Ejemplos Adicionales:")
+
+	// Ejemplo 1: Código genético
+	adn1 := "AGGTAB"
+	adn2 := "GXTXAYB"
+	lcsAdn := subsecuenciaComunMasLarga(adn1, adn2)
+	fmt.Printf("ADN1: %s, ADN2: %s → LCS: '%s'\n", adn1, adn2, lcsAdn)
+
+	// Ejemplo 2: Palabras en idiomas
+	palabra1 := "PROGRAMMING"
+	palabra2 := "ALGORITHM"
+	lcsPalabra := subsecuenciaComunMasLarga(palabra1, palabra2)
+	fmt.Printf("'%s' ∩ '%s' → '%s'\n", palabra1, palabra2, lcsPalabra)
+
+	// Ejemplo 3: Búsqueda múltiple con KMP
+	fmt.Println("\n🔍 Búsqueda Múltiple:")
+	textoLargo := "ABABCABABABCABCABC"
+	patrones := []string{"AB", "ABC", "ABAB", "CAB"}
+
+	fmt.Printf("Texto: %s\n", textoLargo)
+	for _, p := range patrones {
+		ocur := buscarPatronKMP(textoLargo, p)
+		fmt.Printf("Patrón '%s': %v\n", p, ocur)
+	}
+
+	// Benchmark básico
+	fmt.Println("\n⏱️ Benchmark Básico:")
+	textoGrande := strings.Repeat("ABCAB", 1000) + "ABCDEF" + strings.Repeat("XYZXYZ", 1000)
+	patronBuscar := "ABCDEF"
+
+	inicio := time.Now()
+	resultado := buscarPatronKMP(textoGrande, patronBuscar)
+	duracion := time.Since(inicio)
+
+	fmt.Printf("Búsqueda en texto de %d caracteres: %v (tiempo: %v)\n",
+		len(textoGrande), resultado, duracion)
 }
 
 // Función auxiliar para imprimir matrices

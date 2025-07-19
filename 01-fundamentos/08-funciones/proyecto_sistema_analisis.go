@@ -27,12 +27,12 @@ import (
 
 // Registro representa una fila de datos
 type Registro struct {
-	ID       int
-	Nombre   string
-	Edad     int
-	Salario  float64
-	Ciudad   string
-	Fecha    time.Time
+	ID      int
+	Nombre  string
+	Edad    int
+	Salario float64
+	Ciudad  string
+	Fecha   time.Time
 }
 
 // EstadisticasDescriptivas contiene métricas estadísticas
@@ -52,10 +52,10 @@ type EstadisticasDescriptivas struct {
 
 // AnalizadorDatos es el componente principal del sistema
 type AnalizadorDatos struct {
-	datos       []Registro
-	filtros     []func(Registro) bool
+	datos           []Registro
+	filtros         []func(Registro) bool
 	transformadores []func(Registro) Registro
-	logger      func(string)
+	logger          func(string)
 }
 
 // ===== CONSTRUCTORES Y CONFIGURACIÓN =====
@@ -63,10 +63,10 @@ type AnalizadorDatos struct {
 // NuevoAnalizador crea una nueva instancia del analizador
 func NuevoAnalizador() *AnalizadorDatos {
 	return &AnalizadorDatos{
-		datos:       make([]Registro, 0),
-		filtros:     make([]func(Registro) bool, 0),
+		datos:           make([]Registro, 0),
+		filtros:         make([]func(Registro) bool, 0),
 		transformadores: make([]func(Registro) Registro, 0),
-		logger:      func(msg string) { fmt.Printf("[LOG] %s\n", msg) },
+		logger:          func(msg string) { fmt.Printf("[LOG] %s\n", msg) },
 	}
 }
 
@@ -80,7 +80,7 @@ func (a *AnalizadorDatos) ConfigurarLogger(logger func(string)) {
 // CargarDatosCSV carga datos desde un archivo CSV
 func (a *AnalizadorDatos) CargarDatosCSV(nombreArchivo string) error {
 	a.logger(fmt.Sprintf("Cargando datos desde %s", nombreArchivo))
-	
+
 	archivo, err := os.Open(nombreArchivo)
 	if err != nil {
 		return fmt.Errorf("error abriendo archivo: %w", err)
@@ -159,22 +159,22 @@ func (a *AnalizadorDatos) parsearRegistro(record []string) (Registro, error) {
 // GenerarDatosPrueba crea datos de ejemplo para demostración
 func (a *AnalizadorDatos) GenerarDatosPrueba() {
 	a.logger("Generando datos de prueba")
-	
+
 	nombres := []string{"Ana García", "Carlos López", "María Rodríguez", "Juan Pérez", "Laura Martín"}
 	ciudades := []string{"Madrid", "Barcelona", "Valencia", "Sevilla", "Bilbao"}
-	
+
 	for i := 1; i <= 100; i++ {
 		registro := Registro{
 			ID:      i,
 			Nombre:  nombres[i%len(nombres)] + fmt.Sprintf(" %d", i),
-			Edad:    20 + (i%40),
+			Edad:    20 + (i % 40),
 			Salario: 30000 + float64(i%50)*1000,
 			Ciudad:  ciudades[i%len(ciudades)],
 			Fecha:   time.Date(2020+(i%4), time.Month(1+(i%12)), 1+(i%28), 0, 0, 0, 0, time.UTC),
 		}
 		a.datos = append(a.datos, registro)
 	}
-	
+
 	a.logger(fmt.Sprintf("Generados %d registros de prueba", len(a.datos)))
 }
 
@@ -205,7 +205,7 @@ func FiltrarPorCiudad(ciudades ...string) func(Registro) bool {
 	for _, ciudad := range ciudades {
 		ciudadSet[ciudad] = true
 	}
-	
+
 	return func(r Registro) bool {
 		return ciudadSet[r.Ciudad]
 	}
@@ -221,7 +221,7 @@ func FiltrarPorFecha(inicio, fin time.Time) func(Registro) bool {
 // aplicarFiltros aplica todos los filtros configurados
 func (a *AnalizadorDatos) aplicarFiltros(datos []Registro) []Registro {
 	resultado := make([]Registro, 0, len(datos))
-	
+
 	for _, registro := range datos {
 		cumpleTodos := true
 		for _, filtro := range a.filtros {
@@ -234,7 +234,7 @@ func (a *AnalizadorDatos) aplicarFiltros(datos []Registro) []Registro {
 			resultado = append(resultado, registro)
 		}
 	}
-	
+
 	return resultado
 }
 
@@ -267,14 +267,14 @@ func TransformadorNormalizarCiudad() func(Registro) Registro {
 func (a *AnalizadorDatos) aplicarTransformaciones(datos []Registro) []Registro {
 	resultado := make([]Registro, len(datos))
 	copy(resultado, datos)
-	
+
 	for i, registro := range resultado {
 		for _, transformador := range a.transformadores {
 			registro = transformador(registro)
 		}
 		resultado[i] = registro
 	}
-	
+
 	return resultado
 }
 
@@ -291,11 +291,11 @@ func (a *AnalizadorDatos) ObtenerDatosProcesados() []Registro {
 func (a *AnalizadorDatos) CalcularEstadisticasSalario() EstadisticasDescriptivas {
 	datos := a.ObtenerDatosProcesados()
 	salarios := make([]float64, len(datos))
-	
+
 	for i, registro := range datos {
 		salarios[i] = registro.Salario
 	}
-	
+
 	return calcularEstadisticasDescriptivas(salarios)
 }
 
@@ -303,11 +303,11 @@ func (a *AnalizadorDatos) CalcularEstadisticasSalario() EstadisticasDescriptivas
 func (a *AnalizadorDatos) CalcularEstadisticasEdad() EstadisticasDescriptivas {
 	datos := a.ObtenerDatosProcesados()
 	edades := make([]float64, len(datos))
-	
+
 	for i, registro := range datos {
 		edades[i] = float64(registro.Edad)
 	}
-	
+
 	return calcularEstadisticasDescriptivas(edades)
 }
 
@@ -382,7 +382,7 @@ func calcularPercentil(sortedValues []float64, percentil float64) float64 {
 	if len(sortedValues) == 0 {
 		return 0
 	}
-	
+
 	index := (percentil / 100) * float64(len(sortedValues)-1)
 	lower := int(math.Floor(index))
 	upper := int(math.Ceil(index))
@@ -401,11 +401,11 @@ func calcularPercentil(sortedValues []float64, percentil float64) float64 {
 func (a *AnalizadorDatos) AgruparPorCiudad() map[string][]Registro {
 	datos := a.ObtenerDatosProcesados()
 	grupos := make(map[string][]Registro)
-	
+
 	for _, registro := range datos {
 		grupos[registro.Ciudad] = append(grupos[registro.Ciudad], registro)
 	}
-	
+
 	return grupos
 }
 
@@ -413,14 +413,14 @@ func (a *AnalizadorDatos) AgruparPorCiudad() map[string][]Registro {
 func (a *AnalizadorDatos) AgruparPorRangoEdad(tamañoRango int) map[string][]Registro {
 	datos := a.ObtenerDatosProcesados()
 	grupos := make(map[string][]Registro)
-	
+
 	for _, registro := range datos {
 		rangoInicio := (registro.Edad / tamañoRango) * tamañoRango
 		rangoFin := rangoInicio + tamañoRango - 1
 		clave := fmt.Sprintf("%d-%d", rangoInicio, rangoFin)
 		grupos[clave] = append(grupos[clave], registro)
 	}
-	
+
 	return grupos
 }
 
@@ -429,20 +429,20 @@ func (a *AnalizadorDatos) AgruparPorRangoEdad(tamañoRango int) map[string][]Reg
 // GenerarReporteCompleto genera un reporte detallado del análisis
 func (a *AnalizadorDatos) GenerarReporteCompleto() string {
 	var reporte strings.Builder
-	
+
 	reporte.WriteString("📊 REPORTE COMPLETO DE ANÁLISIS DE DATOS\n")
 	reporte.WriteString("==========================================\n\n")
-	
+
 	// Información general
 	totalRegistros := len(a.datos)
 	registrosProcesados := len(a.ObtenerDatosProcesados())
-	
+
 	reporte.WriteString("📈 RESUMEN GENERAL\n")
 	reporte.WriteString(fmt.Sprintf("Total de registros: %d\n", totalRegistros))
 	reporte.WriteString(fmt.Sprintf("Registros procesados: %d\n", registrosProcesados))
 	reporte.WriteString(fmt.Sprintf("Filtros aplicados: %d\n", len(a.filtros)))
 	reporte.WriteString(fmt.Sprintf("Transformaciones aplicadas: %d\n\n", len(a.transformadores)))
-	
+
 	// Estadísticas de salarios
 	statsSalario := a.CalcularEstadisticasSalario()
 	reporte.WriteString("💰 ANÁLISIS DE SALARIOS\n")
@@ -452,7 +452,7 @@ func (a *AnalizadorDatos) GenerarReporteCompleto() string {
 	reporte.WriteString(fmt.Sprintf("Máximo: €%.2f\n", statsSalario.Maximo))
 	reporte.WriteString(fmt.Sprintf("Desviación estándar: €%.2f\n", statsSalario.Desviacion))
 	reporte.WriteString(fmt.Sprintf("Rango: €%.2f\n\n", statsSalario.Rango))
-	
+
 	// Estadísticas de edades
 	statsEdad := a.CalcularEstadisticasEdad()
 	reporte.WriteString("👥 ANÁLISIS DE EDADES\n")
@@ -461,7 +461,7 @@ func (a *AnalizadorDatos) GenerarReporteCompleto() string {
 	reporte.WriteString(fmt.Sprintf("Mínimo: %.0f años\n", statsEdad.Minimo))
 	reporte.WriteString(fmt.Sprintf("Máximo: %.0f años\n", statsEdad.Maximo))
 	reporte.WriteString(fmt.Sprintf("Desviación estándar: %.1f años\n\n", statsEdad.Desviacion))
-	
+
 	// Análisis por ciudad
 	gruposCiudad := a.AgruparPorCiudad()
 	reporte.WriteString("🏙️ DISTRIBUCIÓN POR CIUDAD\n")
@@ -471,18 +471,18 @@ func (a *AnalizadorDatos) GenerarReporteCompleto() string {
 			salarioPromedio += r.Salario
 		}
 		salarioPromedio /= float64(len(registros))
-		
-		reporte.WriteString(fmt.Sprintf("%s: %d empleados (salario promedio: €%.2f)\n", 
+
+		reporte.WriteString(fmt.Sprintf("%s: %d empleados (salario promedio: €%.2f)\n",
 			ciudad, len(registros), salarioPromedio))
 	}
-	
+
 	return reporte.String()
 }
 
 // VisualizarHistograma crea una visualización simple en texto de un histograma
 func (a *AnalizadorDatos) VisualizarHistograma(campo string, bins int) string {
 	datos := a.ObtenerDatosProcesados()
-	
+
 	var valores []float64
 	switch campo {
 	case "salario":
@@ -496,7 +496,7 @@ func (a *AnalizadorDatos) VisualizarHistograma(campo string, bins int) string {
 	default:
 		return "Campo no soportado para histograma"
 	}
-	
+
 	return generarHistogramaTexto(valores, bins, campo)
 }
 
@@ -505,7 +505,7 @@ func generarHistogramaTexto(valores []float64, bins int, titulo string) string {
 	if len(valores) == 0 {
 		return "No hay datos para mostrar"
 	}
-	
+
 	// Encontrar min y max
 	min, max := valores[0], valores[0]
 	for _, v := range valores {
@@ -516,11 +516,11 @@ func generarHistogramaTexto(valores []float64, bins int, titulo string) string {
 			max = v
 		}
 	}
-	
+
 	// Crear bins
 	binSize := (max - min) / float64(bins)
 	counts := make([]int, bins)
-	
+
 	for _, v := range valores {
 		binIndex := int((v - min) / binSize)
 		if binIndex >= bins {
@@ -528,7 +528,7 @@ func generarHistogramaTexto(valores []float64, bins int, titulo string) string {
 		}
 		counts[binIndex]++
 	}
-	
+
 	// Encontrar el máximo count para escalar
 	maxCount := 0
 	for _, count := range counts {
@@ -536,24 +536,24 @@ func generarHistogramaTexto(valores []float64, bins int, titulo string) string {
 			maxCount = count
 		}
 	}
-	
+
 	// Generar histograma
 	var resultado strings.Builder
 	resultado.WriteString(fmt.Sprintf("\n📊 HISTOGRAMA: %s\n", strings.ToUpper(titulo)))
 	resultado.WriteString(strings.Repeat("=", 50) + "\n")
-	
+
 	for i, count := range counts {
 		rangeStart := min + float64(i)*binSize
 		rangeEnd := rangeStart + binSize
-		
+
 		// Calcular barras (máximo 40 caracteres)
 		barLength := int(float64(count) / float64(maxCount) * 40)
 		bar := strings.Repeat("█", barLength)
-		
-		resultado.WriteString(fmt.Sprintf("[%8.1f-%8.1f]: %s (%d)\n", 
+
+		resultado.WriteString(fmt.Sprintf("[%8.1f-%8.1f]: %s (%d)\n",
 			rangeStart, rangeEnd, bar, count))
 	}
-	
+
 	return resultado.String()
 }
 
@@ -604,11 +604,11 @@ func (p *Pipeline) Ordenar(comparador func(Registro, Registro) bool) *Pipeline {
 	operacion := func(datos []Registro) []Registro {
 		resultado := make([]Registro, len(datos))
 		copy(resultado, datos)
-		
+
 		sort.Slice(resultado, func(i, j int) bool {
 			return comparador(resultado[i], resultado[j])
 		})
-		
+
 		return resultado
 	}
 	p.operaciones = append(p.operaciones, operacion)
@@ -634,33 +634,33 @@ func (a *AnalizadorDatos) EjecutarPipeline(pipeline *Pipeline) []Registro {
 func main() {
 	fmt.Println("🚀 SISTEMA DE ANÁLISIS DE DATOS - PROYECTO INTEGRADOR")
 	fmt.Println("=====================================================")
-	
+
 	// Crear analizador
 	analizador := NuevoAnalizador()
-	
+
 	// Configurar logger personalizado
 	analizador.ConfigurarLogger(func(msg string) {
 		fmt.Printf("🔍 [%s] %s\n", time.Now().Format("15:04:05"), msg)
 	})
-	
+
 	// Generar datos de prueba
 	analizador.GenerarDatosPrueba()
-	
+
 	fmt.Println("\n" + strings.Repeat("=", 60))
 	demoFiltrosBasicos(analizador)
-	
+
 	fmt.Println("\n" + strings.Repeat("=", 60))
 	demoTransformaciones(analizador)
-	
+
 	fmt.Println("\n" + strings.Repeat("=", 60))
 	demoAnalisisEstadistico(analizador)
-	
+
 	fmt.Println("\n" + strings.Repeat("=", 60))
 	demoVisualizacion(analizador)
-	
+
 	fmt.Println("\n" + strings.Repeat("=", 60))
 	demoPipeline(analizador)
-	
+
 	fmt.Println("\n" + strings.Repeat("=", 60))
 	demoReporteCompleto(analizador)
 }
@@ -668,26 +668,26 @@ func main() {
 func demoFiltrosBasicos(analizador *AnalizadorDatos) {
 	fmt.Println("📊 DEMO: Sistema de Filtros")
 	fmt.Println("===========================")
-	
+
 	// Limpiar filtros anteriores
 	analizador.filtros = nil
-	
+
 	fmt.Printf("Datos originales: %d registros\n", len(analizador.datos))
-	
+
 	// Filtro por edad
 	analizador.AgregarFiltro(FiltrarPorEdad(25, 40))
 	datos := analizador.ObtenerDatosProcesados()
 	fmt.Printf("Después de filtrar por edad (25-40): %d registros\n", len(datos))
-	
+
 	// Filtro adicional por salario
 	analizador.AgregarFiltro(FiltrarPorSalario(35000, 50000))
 	datos = analizador.ObtenerDatosProcesados()
 	fmt.Printf("Después de filtrar por salario (35k-50k): %d registros\n", len(datos))
-	
+
 	// Mostrar algunos ejemplos
 	fmt.Println("\nEjemplos de registros filtrados:")
 	for i, registro := range datos[:min(5, len(datos))] {
-		fmt.Printf("%d. %s - Edad: %d, Salario: €%.0f\n", 
+		fmt.Printf("%d. %s - Edad: %d, Salario: €%.0f\n",
 			i+1, registro.Nombre, registro.Edad, registro.Salario)
 	}
 }
@@ -695,21 +695,21 @@ func demoFiltrosBasicos(analizador *AnalizadorDatos) {
 func demoTransformaciones(analizador *AnalizadorDatos) {
 	fmt.Println("🔄 DEMO: Sistema de Transformaciones")
 	fmt.Println("====================================")
-	
+
 	// Limpiar transformadores anteriores
 	analizador.transformadores = nil
-	
+
 	// Añadir bonificación para mayores de 30
 	analizador.AgregarTransformador(TransformadorBonificacion(0.1)) // 10% de bonificación
-	
+
 	// Normalizar nombres de ciudades
 	analizador.AgregarTransformador(TransformadorNormalizarCiudad())
-	
+
 	datos := analizador.ObtenerDatosProcesados()
-	
+
 	fmt.Println("Ejemplos con transformaciones aplicadas:")
 	for i, registro := range datos[:min(3, len(datos))] {
-		fmt.Printf("%d. %s - Edad: %d, Salario: €%.0f, Ciudad: %s\n", 
+		fmt.Printf("%d. %s - Edad: %d, Salario: €%.0f, Ciudad: %s\n",
 			i+1, registro.Nombre, registro.Edad, registro.Salario, registro.Ciudad)
 	}
 }
@@ -717,7 +717,7 @@ func demoTransformaciones(analizador *AnalizadorDatos) {
 func demoAnalisisEstadistico(analizador *AnalizadorDatos) {
 	fmt.Println("📈 DEMO: Análisis Estadístico")
 	fmt.Println("=============================")
-	
+
 	// Estadísticas de salarios
 	statsSalario := analizador.CalcularEstadisticasSalario()
 	fmt.Println("ESTADÍSTICAS DE SALARIOS:")
@@ -725,14 +725,14 @@ func demoAnalisisEstadistico(analizador *AnalizadorDatos) {
 	fmt.Printf("  Mediana: €%.2f\n", statsSalario.Mediana)
 	fmt.Printf("  Desviación estándar: €%.2f\n", statsSalario.Desviacion)
 	fmt.Printf("  Rango: €%.2f - €%.2f\n", statsSalario.Minimo, statsSalario.Maximo)
-	
+
 	// Estadísticas de edades
 	statsEdad := analizador.CalcularEstadisticasEdad()
 	fmt.Println("\nESTADÍSTICAS DE EDADES:")
 	fmt.Printf("  Media: %.1f años\n", statsEdad.Media)
 	fmt.Printf("  Mediana: %.1f años\n", statsEdad.Mediana)
 	fmt.Printf("  Rango: %.0f - %.0f años\n", statsEdad.Minimo, statsEdad.Maximo)
-	
+
 	// Análisis por grupos
 	fmt.Println("\nDISTRIBUCIÓN POR CIUDAD:")
 	grupos := analizador.AgruparPorCiudad()
@@ -744,11 +744,11 @@ func demoAnalisisEstadistico(analizador *AnalizadorDatos) {
 func demoVisualizacion(analizador *AnalizadorDatos) {
 	fmt.Println("📊 DEMO: Visualización")
 	fmt.Println("======================")
-	
+
 	// Histograma de salarios
 	histogramaSalarios := analizador.VisualizarHistograma("salario", 8)
 	fmt.Println(histogramaSalarios)
-	
+
 	// Histograma de edades
 	histogramaEdades := analizador.VisualizarHistograma("edad", 6)
 	fmt.Println(histogramaEdades)
@@ -757,7 +757,7 @@ func demoVisualizacion(analizador *AnalizadorDatos) {
 func demoPipeline(analizador *AnalizadorDatos) {
 	fmt.Println("🔄 DEMO: Pipeline de Datos")
 	fmt.Println("==========================")
-	
+
 	// Crear pipeline complejo
 	pipeline := NuevoPipeline().
 		Filtrar(func(r Registro) bool { return r.Edad >= 30 }).
@@ -767,9 +767,9 @@ func demoPipeline(analizador *AnalizadorDatos) {
 			return r
 		}).
 		Ordenar(func(r1, r2 Registro) bool { return r1.Salario > r2.Salario })
-	
+
 	resultados := analizador.EjecutarPipeline(pipeline)
-	
+
 	fmt.Printf("Pipeline ejecutado: %d registros resultantes\n", len(resultados))
 	fmt.Println("Top 5 salarios después del pipeline:")
 	for i, registro := range resultados[:min(5, len(resultados))] {
@@ -780,7 +780,7 @@ func demoPipeline(analizador *AnalizadorDatos) {
 func demoReporteCompleto(analizador *AnalizadorDatos) {
 	fmt.Println("📋 DEMO: Reporte Completo")
 	fmt.Println("=========================")
-	
+
 	reporte := analizador.GenerarReporteCompleto()
 	fmt.Println(reporte)
 }

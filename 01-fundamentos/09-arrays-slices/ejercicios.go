@@ -1,6 +1,6 @@
 // 📚 Ejercicios: Arrays y Slices
 // ===============================
-// 
+//
 // Estos ejercicios te ayudarán a dominar arrays y slices en Go.
 // Completa cada función siguiendo las especificaciones.
 
@@ -11,7 +11,6 @@ import (
 	"math"
 	"math/rand"
 	"sort"
-	"strings"
 	"time"
 )
 
@@ -186,10 +185,10 @@ func (c *ColaCircular) EstaVacia() bool {
 
 // 6.2 - Implementa un Buffer Deslizante para calcular promedios móviles
 type BufferDeslizante struct {
-	datos   []float64
-	indice  int
-	lleno   bool
-	tamaño  int
+	datos  []float64
+	indice int
+	lleno  bool
+	tamaño int
 }
 
 func NuevoBufferDeslizante(tamaño int) *BufferDeslizante {
@@ -360,65 +359,65 @@ func subsecuenciaComunMasLarga(s1, s2 string) string {
 func main() {
 	fmt.Println("🧪 EJERCICIOS: Arrays y Slices")
 	fmt.Println("===============================")
-	
+
 	// Aquí puedes probar tus implementaciones
 	demostrarEjercicios()
 }
 
 func demostrarEjercicios() {
 	fmt.Println("\n📊 Ejecutando demostraciones...")
-	
+
 	// Demo Ejercicio 1: Análisis de array
 	fmt.Println("\n1. Análisis de Array:")
 	numeros := [10]int{5, 2, 8, 1, 9, 3, 7, 4, 6, 10}
 	suma, promedio, maximo, minimo := analizarArray(numeros)
 	fmt.Printf("Array: %v\n", numeros)
 	fmt.Printf("Suma: %d, Promedio: %.2f, Max: %d, Min: %d\n", suma, promedio, maximo, minimo)
-	
+
 	// Demo Ejercicio 2: Búsqueda
 	fmt.Println("\n2. Búsqueda Lineal:")
 	slice := []int{1, 3, 5, 3, 7, 3, 9}
 	indices := busquedaLinealTodos(slice, 3)
 	fmt.Printf("Slice: %v\n", slice)
 	fmt.Printf("Índices donde aparece 3: %v\n", indices)
-	
+
 	// Demo Ejercicio 3: Ordenamiento
 	fmt.Println("\n3. Algoritmos de Ordenamiento:")
 	datos := []int{64, 34, 25, 12, 22, 11, 90}
 	fmt.Printf("Original: %v\n", datos)
-	
+
 	copia := make([]int, len(datos))
 	copy(copia, datos)
 	selectionSort(copia)
 	fmt.Printf("Selection Sort: %v\n", copia)
-	
+
 	copia = make([]int, len(datos))
 	copy(copia, datos)
 	insertionSort(copia)
 	fmt.Printf("Insertion Sort: %v\n", copia)
-	
+
 	resultado := mergeSort(datos)
 	fmt.Printf("Merge Sort: %v\n", resultado)
-	
+
 	// Demo Ejercicio 4: Operaciones Funcionales
 	fmt.Println("\n4. Operaciones Funcionales:")
 	numeros2 := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-	
+
 	pares := filtrar(numeros2, func(n int) bool { return n%2 == 0 })
 	fmt.Printf("Números pares: %v\n", pares)
-	
+
 	cuadrados := mapear(numeros2, func(n int) int { return n * n })
 	fmt.Printf("Cuadrados: %v\n", cuadrados)
-	
+
 	suma2 := reducir(numeros2, 0, func(a, b int) int { return a + b })
 	fmt.Printf("Suma total: %d\n", suma2)
-	
+
 	// Demo Ejercicio 5: Matrices
 	fmt.Println("\n5. Matrices:")
 	identidad := matrizIdentidad(3)
 	fmt.Printf("Matriz identidad 3x3:\n")
 	imprimirMatriz(identidad)
-	
+
 	// Demo Ejercicio 6: Estructuras Avanzadas
 	fmt.Println("\n6. Cola Circular:")
 	cola := NuevaColaCircular(5)
@@ -426,42 +425,42 @@ func demostrarEjercicios() {
 		cola.Enqueue(i)
 		fmt.Printf("Enqueue %d\n", i)
 	}
-	
+
 	for !cola.EstaVacia() {
 		elemento, _ := cola.Dequeue()
 		fmt.Printf("Dequeue: %v\n", elemento)
 	}
-	
+
 	// Demo Ejercicio 7: Buffer Deslizante
 	fmt.Println("\n7. Buffer Deslizante:")
 	buffer := NuevoBufferDeslizante(3)
 	valores := []float64{1.0, 2.0, 3.0, 4.0, 5.0}
-	
+
 	for _, v := range valores {
 		buffer.Agregar(v)
 		fmt.Printf("Agregado %.1f - Promedio: %.2f\n", v, buffer.Promedio())
 	}
-	
+
 	// Demo Ejercicio 8: Optimización
 	fmt.Println("\n8. Eliminación de Duplicados:")
 	conDuplicados := []int{1, 2, 2, 3, 4, 4, 4, 5}
 	sinDuplicados := eliminarDuplicados(conDuplicados)
 	fmt.Printf("Original: %v\n", conDuplicados)
 	fmt.Printf("Sin duplicados: %v\n", sinDuplicados)
-	
+
 	// Demo Ejercicio 9: Histograma
 	fmt.Println("\n9. Histograma:")
 	hist := NuevoHistograma(0.0, 10.0, 5)
 	datosRandom := []float64{1.2, 3.4, 5.6, 7.8, 2.1, 4.3, 6.5, 8.7, 1.9}
-	
+
 	for _, v := range datosRandom {
 		hist.AgregarValor(v)
 	}
-	
+
 	frecuencias := hist.ObtenerFrecuencias()
 	fmt.Printf("Frecuencias por bin: %v\n", frecuencias)
 	fmt.Printf("Bin más frecuente: %d\n", hist.BinMasFrecuente())
-	
+
 	fmt.Println("\n✅ Demo completada. Implementa las funciones para ver resultados reales.")
 }
 
@@ -477,42 +476,42 @@ func imprimirMatriz(matriz [][]int) {
 func benchmarkOrdenamiento() {
 	fmt.Println("\n⏱️  BENCHMARK: Algoritmos de Ordenamiento")
 	fmt.Println("==========================================")
-	
+
 	tamaños := []int{1000, 5000, 10000}
-	
+
 	for _, n := range tamaños {
 		fmt.Printf("\nTamaño: %d elementos\n", n)
-		
+
 		// Generar datos aleatorios
 		datos := make([]int, n)
 		for i := range datos {
 			datos[i] = rand.Intn(n)
 		}
-		
+
 		// Benchmark Selection Sort
 		copia := make([]int, len(datos))
 		copy(copia, datos)
 		inicio := time.Now()
 		selectionSort(copia)
 		tiempoSelection := time.Since(inicio)
-		
+
 		// Benchmark Insertion Sort
 		copy(copia, datos)
 		inicio = time.Now()
 		insertionSort(copia)
 		tiempoInsertion := time.Since(inicio)
-		
+
 		// Benchmark Merge Sort
 		inicio = time.Now()
 		mergeSort(datos)
 		tiempoMerge := time.Since(inicio)
-		
+
 		// Benchmark Sort nativo de Go
 		copy(copia, datos)
 		inicio = time.Now()
 		sort.Ints(copia)
 		tiempoNativo := time.Since(inicio)
-		
+
 		fmt.Printf("Selection Sort: %v\n", tiempoSelection)
 		fmt.Printf("Insertion Sort: %v\n", tiempoInsertion)
 		fmt.Printf("Merge Sort:     %v\n", tiempoMerge)
@@ -525,7 +524,7 @@ func benchmarkOrdenamiento() {
 func validarImplementaciones() {
 	fmt.Println("\n🧪 VALIDACIÓN: Implementaciones")
 	fmt.Println("================================")
-	
+
 	// Validar que las funciones están implementadas
 	tests := []struct {
 		nombre string
@@ -538,7 +537,7 @@ func validarImplementaciones() {
 		{"Matriz Identidad", testMatrizIdentidad},
 		{"Cola Circular", testColaCircular},
 	}
-	
+
 	pasados := 0
 	for _, test := range tests {
 		if test.test() {
@@ -548,7 +547,7 @@ func validarImplementaciones() {
 			fmt.Printf("❌ %s: FALLIDO\n", test.nombre)
 		}
 	}
-	
+
 	fmt.Printf("\nResultado: %d/%d tests pasados\n", pasados, len(tests))
 }
 
@@ -605,11 +604,11 @@ func testColaCircular() bool {
 	if cola == nil {
 		return false
 	}
-	
+
 	// Test básico
 	cola.Enqueue(1)
 	cola.Enqueue(2)
-	
+
 	elemento, ok := cola.Dequeue()
 	return ok && elemento == 1
 }

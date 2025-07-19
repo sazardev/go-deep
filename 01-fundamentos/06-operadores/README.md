@@ -49,6 +49,61 @@ func operadoresBasicos() {
     fmt.Printf("+x = %d\n", +x)    // 10 (positivo explícito)
     fmt.Printf("-x = %d\n", -x)    // -10 (negativo)
 }
+
+// Demostración de precedencia aritmética
+func precedenciaAritmetica() {
+    fmt.Println("\n=== Precedencia Aritmética ===")
+    
+    // Sin paréntesis
+    result1 := 2 + 3 * 4      // 14 (no 20)
+    result2 := 10 - 6 / 2     // 7 (no 2)
+    result3 := 5 * 2 + 3      // 13
+    
+    fmt.Printf("2 + 3 * 4 = %d (multiplicación primero)\n", result1)
+    fmt.Printf("10 - 6 / 2 = %d (división primero)\n", result2)
+    fmt.Printf("5 * 2 + 3 = %d (multiplicación primero)\n", result3)
+    
+    // Con paréntesis para claridad
+    result4 := (2 + 3) * 4    // 20
+    result5 := (10 - 6) / 2   // 2
+    result6 := 5 * (2 + 3)    // 25
+    
+    fmt.Printf("(2 + 3) * 4 = %d\n", result4)
+    fmt.Printf("(10 - 6) / 2 = %d\n", result5)
+    fmt.Printf("5 * (2 + 3) = %d\n", result6)
+}
+
+// Demostración de overflow y underflow
+func overflowDemo() {
+    fmt.Println("\n=== Overflow y Underflow ===")
+    
+    // Overflow con int8
+    var small int8 = 127  // Valor máximo para int8
+    fmt.Printf("int8 máximo: %d\n", small)
+    
+    // Esto causaría overflow en compilación
+    // small = 128  // Error: constant 128 overflows int8
+    
+    // Overflow en runtime (cuidado)
+    small += 1  // Esto compila pero puede dar comportamiento inesperado
+    fmt.Printf("Después de +1: %d (¡overflow!)\n", small)
+    
+    // Underflow con uint
+    var unsigned uint = 0
+    fmt.Printf("uint mínimo: %d\n", unsigned)
+    
+    // Esto causaría underflow
+    // unsigned -= 1  // Behavior depends on implementation
+    
+    // ✅ Verificación segura
+    if unsigned > 0 {
+        unsigned -= 1
+    } else {
+        fmt.Println("⚠️ Underflow evitado")
+    }
+}
+```
+}
 ```
 
 ### 🧠 Analogía: Operadores como Herramientas
@@ -191,6 +246,564 @@ func operadoresComparacion() {
     fmt.Printf("x == int(y): %t\n", x == int(y))  // ✅ true
     fmt.Printf("int64(x) == y: %t\n", int64(x) == y)  // ✅ true
 }
+
+// Comparación de flotantes - ¡Cuidado!
+func comparacionFlotantes() {
+    fmt.Println("\n=== Comparación de Flotantes (¡Peligroso!) ===")
+    
+    // ❌ Comparación directa de flotantes puede fallar
+    a := 0.1 + 0.2
+    b := 0.3
+    fmt.Printf("0.1 + 0.2 = %.17f\n", a)
+    fmt.Printf("0.3 = %.17f\n", b)
+    fmt.Printf("¿Son iguales? %t\n", a == b)  // ¡Puede ser false!
+    
+    // ✅ Comparación con epsilon
+    epsilon := 1e-9
+    diff := a - b
+    if diff < 0 {
+        diff = -diff  // Valor absoluto
+    }
+    isEqual := diff < epsilon
+    fmt.Printf("¿Son iguales con epsilon? %t\n", isEqual)
+    
+    // ✅ Función helper para comparar flotantes
+    floatEqual := func(a, b, epsilon float64) bool {
+        diff := a - b
+        if diff < 0 {
+            diff = -diff
+        }
+        return diff < epsilon
+    }
+    
+    fmt.Printf("Usando función helper: %t\n", floatEqual(a, b, 1e-9))
+}
+```
+
+---
+
+## 🔗 Operadores Lógicos: La Lógica Booleana
+
+### 🧠 AND, OR, NOT - Los Fundamentos
+
+```go
+package main
+
+import "fmt"
+
+func operadoresLogicos() {
+    fmt.Println("=== Operadores Lógicos ===")
+    
+    a, b := true, false
+    fmt.Printf("a = %t, b = %t\n", a, b)
+    
+    // Operador AND (&&)
+    fmt.Printf("a && b = %t\n", a && b)  // false
+    fmt.Printf("a && true = %t\n", a && true)  // true
+    
+    // Operador OR (||)
+    fmt.Printf("a || b = %t\n", a || b)  // true
+    fmt.Printf("false || b = %t\n", false || b)  // false
+    
+    // Operador NOT (!)
+    fmt.Printf("!a = %t\n", !a)  // false
+    fmt.Printf("!b = %t\n", !b)  // true
+    
+    // Combinaciones complejas
+    fmt.Printf("!(a && b) = %t\n", !(a && b))  // true
+    fmt.Printf("!a || !b = %t\n", !a || !b)    // true (De Morgan)
+}
+
+// Demostración de cortocircuito
+func cortocircuito() {
+    fmt.Println("\n=== Evaluación de Cortocircuito ===")
+    
+    // Función que imprime y retorna
+    check := func(name string, value bool) bool {
+        fmt.Printf("  Evaluando %s: %t\n", name, value)
+        return value
+    }
+    
+    fmt.Println("AND con cortocircuito:")
+    result1 := check("false", false) && check("true", true)
+    fmt.Printf("Resultado: %t\n", result1)
+    // Solo evalúa el primer operando (false)
+    
+    fmt.Println("\nOR con cortocircuito:")
+    result2 := check("true", true) || check("false", false)
+    fmt.Printf("Resultado: %t\n", result2)
+    // Solo evalúa el primer operando (true)
+    
+    fmt.Println("\nSin cortocircuito:")
+    result3 := check("false", false) && check("true", true)
+    fmt.Printf("Resultado: %t\n", result3)
+}
+
+// Patrones útiles con operadores lógicos
+func patronesLogicos() {
+    fmt.Println("\n=== Patrones Útiles ===")
+    
+    // Validación de rangos
+    age := 25
+    isValidAge := age >= 18 && age <= 65
+    fmt.Printf("Edad %d es válida: %t\n", age, isValidAge)
+    
+    // Valores por defecto
+    name := ""
+    displayName := name
+    if name == "" {
+        displayName = "Usuario Anónimo"
+    }
+    // Forma más idiomática:
+    // displayName := name != "" && name || "Usuario Anónimo"  // No funciona así en Go
+    
+    fmt.Printf("Nombre a mostrar: %s\n", displayName)
+    
+    // Verificación de múltiples condiciones
+    hour := 14
+    isWorkingHours := hour >= 9 && hour <= 17
+    isWeekend := false  // Simplificado
+    isAvailable := isWorkingHours && !isWeekend
+    
+    fmt.Printf("Disponible: %t\n", isAvailable)
+}
+```
+
+---
+
+## 🔢 Operadores Bitwise: Manipulando Bits
+
+### ⚡ Operaciones a Nivel de Bit
+
+```go
+package main
+
+import "fmt"
+
+func operadoresBitwise() {
+    fmt.Println("=== Operadores Bitwise ===")
+    
+    a, b := 12, 10  // 1100 y 1010 en binario
+    fmt.Printf("a = %d (binario: %08b)\n", a, a)
+    fmt.Printf("b = %d (binario: %08b)\n", b, b)
+    
+    // AND bitwise (&)
+    and := a & b
+    fmt.Printf("a & b  = %d (binario: %08b)\n", and, and)  // 8 (1000)
+    
+    // OR bitwise (|)
+    or := a | b
+    fmt.Printf("a | b  = %d (binario: %08b)\n", or, or)    // 14 (1110)
+    
+    // XOR bitwise (^)
+    xor := a ^ b
+    fmt.Printf("a ^ b  = %d (binario: %08b)\n", xor, xor)  // 6 (0110)
+    
+    // NOT bitwise (^) - unario
+    not := ^a
+    fmt.Printf("^a     = %d (binario: %032b)\n", not, not)  // Complemento
+    
+    // Desplazamientos
+    fmt.Println("\nDesplazamientos:")
+    left := a << 2   // Izquierda: multiplica por 2^n
+    right := a >> 1  // Derecha: divide por 2^n
+    
+    fmt.Printf("a << 2 = %d (binario: %08b) // %d * 4\n", left, left, a)
+    fmt.Printf("a >> 1 = %d (binario: %08b) // %d / 2\n", right, right, a)
+}
+
+// Casos de uso prácticos con bitwise
+func casosPracticosBitwise() {
+    fmt.Println("\n=== Casos Prácticos Bitwise ===")
+    
+    // 1. Verificar si un número es par
+    num := 42
+    isPar := (num & 1) == 0
+    fmt.Printf("%d es par: %t\n", num, isPar)
+    
+    // 2. Potencias de 2 rápidas
+    fmt.Println("\nPotencias de 2:")
+    for i := 0; i < 5; i++ {
+        power := 1 << i  // 2^i
+        fmt.Printf("2^%d = %d\n", i, power)
+    }
+    
+    // 3. Intercambio sin variable temporal (XOR swap)
+    x, y := 25, 30
+    fmt.Printf("Antes: x=%d, y=%d\n", x, y)
+    x = x ^ y
+    y = x ^ y
+    x = x ^ y
+    fmt.Printf("Después: x=%d, y=%d\n", x, y)
+    
+    // 4. Contar bits activados (población)
+    value := 23  // 10111 en binario
+    count := 0
+    temp := value
+    for temp != 0 {
+        count += temp & 1
+        temp >>= 1
+    }
+    fmt.Printf("%d (%08b) tiene %d bits activados\n", value, value, count)
+}
+
+// Sistema de flags/permisos con bitwise
+type Permission uint8
+
+const (
+    Read    Permission = 1 << iota  // 1 (00000001)
+    Write                           // 2 (00000010)
+    Execute                         // 4 (00000100)
+    Delete                          // 8 (00001000)
+)
+
+func sistemaPermisos() {
+    fmt.Println("\n=== Sistema de Permisos con Bitwise ===")
+    
+    // Crear permisos
+    userPerms := Read | Write                    // 3 (00000011)
+    adminPerms := Read | Write | Execute | Delete // 15 (00001111)
+    
+    fmt.Printf("Usuario: %08b (%d)\n", userPerms, userPerms)
+    fmt.Printf("Admin:   %08b (%d)\n", adminPerms, adminPerms)
+    
+    // Verificar permisos
+    hasRead := userPerms&Read != 0
+    hasDelete := userPerms&Delete != 0
+    
+    fmt.Printf("Usuario puede leer: %t\n", hasRead)
+    fmt.Printf("Usuario puede eliminar: %t\n", hasDelete)
+    
+    // Agregar permiso
+    userPerms |= Execute
+    fmt.Printf("Usuario con Execute: %08b (%d)\n", userPerms, userPerms)
+    
+    // Quitar permiso
+    userPerms &^= Write  // AND NOT
+    fmt.Printf("Usuario sin Write: %08b (%d)\n", userPerms, userPerms)
+    
+    // Toggle permiso
+    userPerms ^= Read
+    fmt.Printf("Usuario toggle Read: %08b (%d)\n", userPerms, userPerms)
+}
+```
+
+---
+
+## 📐 Precedencia de Operadores: El Orden Importa
+
+### 🎯 Tabla de Precedencia
+
+```go
+package main
+
+import "fmt"
+
+func precedenciaCompleta() {
+    fmt.Println("=== Precedencia de Operadores ===")
+    
+    // Tabla de precedencia (de mayor a menor):
+    // 1. * / % << >> & &^
+    // 2. + - | ^
+    // 3. == != < <= > >=
+    // 4. &&
+    // 5. ||
+    
+    // Ejemplos de precedencia
+    fmt.Println("Sin paréntesis:")
+    result1 := 2 + 3*4 == 14    // true: (2 + (3*4)) == 14
+    result2 := 10 > 5 && 3 < 7  // true: (10 > 5) && (3 < 7)
+    result3 := 1 << 2 + 1       // 8: 1 << (2 + 1) = 1 << 3
+    
+    fmt.Printf("2 + 3*4 == 14: %t\n", result1)
+    fmt.Printf("10 > 5 && 3 < 7: %t\n", result2)
+    fmt.Printf("1 << 2 + 1: %d\n", result3)
+    
+    // Con paréntesis para claridad
+    fmt.Println("\nCon paréntesis explícitos:")
+    result4 := (2 + 3) * 4 == 14  // false: 20 != 14
+    result5 := 1 << (2 + 1)       // 8: mismo resultado pero más claro
+    
+    fmt.Printf("(2 + 3) * 4 == 14: %t\n", result4)
+    fmt.Printf("1 << (2 + 1): %d\n", result5)
+}
+
+// Casos complejos de precedencia
+func casosComplejos() {
+    fmt.Println("\n=== Casos Complejos ===")
+    
+    // Mezcla de operadores
+    a, b, c := 2, 3, 4
+    
+    // Sin paréntesis - siguiendo precedencia
+    result1 := a + b*c > 10 && a < 5
+    // Evaluación: a + (b*c) > 10 && a < 5
+    //            2 + (3*4) > 10 && 2 < 5
+    //            2 + 12 > 10 && 2 < 5
+    //            14 > 10 && 2 < 5
+    //            true && true
+    //            true
+    
+    fmt.Printf("a + b*c > 10 && a < 5: %t\n", result1)
+    
+    // Con paréntesis para cambiar orden
+    result2 := (a + b) * c > 10 && a < 5
+    // Evaluación: (2 + 3) * 4 > 10 && 2 < 5
+    //            5 * 4 > 10 && 2 < 5
+    //            20 > 10 && 2 < 5
+    //            true && true
+    //            true
+    
+    fmt.Printf("(a + b) * c > 10 && a < 5: %t\n", result2)
+    
+    // Bitwise con aritmética
+    x := 5
+    result3 := x << 1 + 1  // x << (1 + 1) = 5 << 2 = 20
+    result4 := (x << 1) + 1  // (5 << 1) + 1 = 10 + 1 = 11
+    
+    fmt.Printf("x << 1 + 1: %d\n", result3)
+    fmt.Printf("(x << 1) + 1: %d\n", result4)
+}
+```
+
+---
+
+## 🚀 Proyecto: Calculadora Avanzada
+
+### 🎯 Sistema Completo con Todos los Operadores
+
+```go
+package main
+
+import (
+    "fmt"
+    "math"
+    "strconv"
+    "strings"
+)
+
+// Calculadora avanzada que demuestra todos los operadores
+type Calculadora struct {
+    memoria     float64
+    historial   []string
+    precision   int
+}
+
+func NewCalculadora() *Calculadora {
+    return &Calculadora{
+        memoria:   0,
+        historial: make([]string, 0),
+        precision: 2,
+    }
+}
+
+// Operaciones aritméticas básicas
+func (c *Calculadora) Sumar(a, b float64) float64 {
+    result := a + b
+    c.agregarHistorial(fmt.Sprintf("%.2f + %.2f = %.2f", a, b, result))
+    return result
+}
+
+func (c *Calculadora) Restar(a, b float64) float64 {
+    result := a - b
+    c.agregarHistorial(fmt.Sprintf("%.2f - %.2f = %.2f", a, b, result))
+    return result
+}
+
+func (c *Calculadora) Multiplicar(a, b float64) float64 {
+    result := a * b
+    c.agregarHistorial(fmt.Sprintf("%.2f * %.2f = %.2f", a, b, result))
+    return result
+}
+
+func (c *Calculadora) Dividir(a, b float64) (float64, error) {
+    if b == 0 {
+        return 0, fmt.Errorf("división por cero")
+    }
+    result := a / b
+    c.agregarHistorial(fmt.Sprintf("%.2f / %.2f = %.2f", a, b, result))
+    return result, nil
+}
+
+func (c *Calculadora) Modulo(a, b int) (int, error) {
+    if b == 0 {
+        return 0, fmt.Errorf("módulo por cero")
+    }
+    result := a % b
+    c.agregarHistorial(fmt.Sprintf("%d %% %d = %d", a, b, result))
+    return result, nil
+}
+
+// Operaciones de potencia
+func (c *Calculadora) Potencia(base, exponente float64) float64 {
+    result := math.Pow(base, exponente)
+    c.agregarHistorial(fmt.Sprintf("%.2f ^ %.2f = %.2f", base, exponente, result))
+    return result
+}
+
+// Operaciones bitwise (solo para enteros)
+func (c *Calculadora) AND(a, b int) int {
+    result := a & b
+    c.agregarHistorial(fmt.Sprintf("%d & %d = %d (%08b & %08b = %08b)", 
+        a, b, result, a, b, result))
+    return result
+}
+
+func (c *Calculadora) OR(a, b int) int {
+    result := a | b
+    c.agregarHistorial(fmt.Sprintf("%d | %d = %d (%08b | %08b = %08b)", 
+        a, b, result, a, b, result))
+    return result
+}
+
+func (c *Calculadora) XOR(a, b int) int {
+    result := a ^ b
+    c.agregarHistorial(fmt.Sprintf("%d ^ %d = %d (%08b ^ %08b = %08b)", 
+        a, b, result, a, b, result))
+    return result
+}
+
+func (c *Calculadora) DesplazarIzquierda(a, n int) int {
+    result := a << n
+    c.agregarHistorial(fmt.Sprintf("%d << %d = %d (%08b << %d = %08b)", 
+        a, n, result, a, n, result))
+    return result
+}
+
+func (c *Calculadora) DesplazarDerecha(a, n int) int {
+    result := a >> n
+    c.agregarHistorial(fmt.Sprintf("%d >> %d = %d (%08b >> %d = %08b)", 
+        a, n, result, a, n, result))
+    return result
+}
+
+// Operaciones de comparación
+func (c *Calculadora) Comparar(a, b float64) map[string]bool {
+    result := map[string]bool{
+        "igual":     c.sonIguales(a, b),
+        "mayor":     a > b,
+        "menor":     a < b,
+        "mayor_igual": a >= b,
+        "menor_igual": a <= b,
+        "diferente": !c.sonIguales(a, b),
+    }
+    
+    c.agregarHistorial(fmt.Sprintf("Comparación de %.2f y %.2f", a, b))
+    return result
+}
+
+func (c *Calculadora) sonIguales(a, b float64) bool {
+    epsilon := 1e-9
+    diff := a - b
+    if diff < 0 {
+        diff = -diff
+    }
+    return diff < epsilon
+}
+
+// Funciones de memoria
+func (c *Calculadora) GuardarMemoria(valor float64) {
+    c.memoria = valor
+    c.agregarHistorial(fmt.Sprintf("Memoria guardada: %.2f", valor))
+}
+
+func (c *Calculadora) RecuperarMemoria() float64 {
+    c.agregarHistorial(fmt.Sprintf("Memoria recuperada: %.2f", c.memoria))
+    return c.memoria
+}
+
+func (c *Calculadora) LimpiarMemoria() {
+    c.memoria = 0
+    c.agregarHistorial("Memoria limpiada")
+}
+
+// Gestión de historial
+func (c *Calculadora) agregarHistorial(operacion string) {
+    c.historial = append(c.historial, operacion)
+    if len(c.historial) > 10 {  // Mantener solo las últimas 10
+        c.historial = c.historial[1:]
+    }
+}
+
+func (c *Calculadora) MostrarHistorial() {
+    fmt.Println("\n=== Historial de Operaciones ===")
+    if len(c.historial) == 0 {
+        fmt.Println("No hay operaciones en el historial")
+        return
+    }
+    
+    for i, op := range c.historial {
+        fmt.Printf("%d. %s\n", i+1, op)
+    }
+}
+
+func (c *Calculadora) LimpiarHistorial() {
+    c.historial = c.historial[:0]
+    fmt.Println("Historial limpiado")
+}
+
+// Demostración de la calculadora
+func demoCalculadora() {
+    fmt.Println("=== Demo Calculadora Avanzada ===")
+    
+    calc := NewCalculadora()
+    
+    // Operaciones aritméticas
+    fmt.Println("\n--- Operaciones Aritméticas ---")
+    fmt.Printf("Suma: %.2f\n", calc.Sumar(15.5, 4.3))
+    fmt.Printf("Resta: %.2f\n", calc.Restar(20.0, 5.5))
+    fmt.Printf("Multiplicación: %.2f\n", calc.Multiplicar(3.5, 2.0))
+    
+    if div, err := calc.Dividir(10.0, 3.0); err == nil {
+        fmt.Printf("División: %.2f\n", div)
+    }
+    
+    if mod, err := calc.Modulo(17, 5); err == nil {
+        fmt.Printf("Módulo: %d\n", mod)
+    }
+    
+    // Operaciones bitwise
+    fmt.Println("\n--- Operaciones Bitwise ---")
+    fmt.Printf("AND: %d\n", calc.AND(12, 10))
+    fmt.Printf("OR: %d\n", calc.OR(12, 10))
+    fmt.Printf("XOR: %d\n", calc.XOR(12, 10))
+    fmt.Printf("Desplazar izquierda: %d\n", calc.DesplazarIzquierda(5, 2))
+    fmt.Printf("Desplazar derecha: %d\n", calc.DesplazarDerecha(20, 2))
+    
+    // Comparaciones
+    fmt.Println("\n--- Comparaciones ---")
+    comp := calc.Comparar(7.5, 7.5)
+    for op, result := range comp {
+        fmt.Printf("%s: %t\n", op, result)
+    }
+    
+    // Memoria
+    fmt.Println("\n--- Funciones de Memoria ---")
+    calc.GuardarMemoria(42.0)
+    fmt.Printf("Valor en memoria: %.2f\n", calc.RecuperarMemoria())
+    
+    // Mostrar historial
+    calc.MostrarHistorial()
+}
+
+func main() {
+    operadoresBasicos()
+    precedenciaAritmetica()
+    overflowDemo()
+    operadoresAsignacion()
+    operadoresComparacion()
+    comparacionFlotantes()
+    operadoresLogicos()
+    cortocircuito()
+    patronesLogicos()
+    operadoresBitwise()
+    casosPracticosBitwise()
+    sistemaPermisos()
+    precedenciaCompleta()
+    casosComplejos()
+    demoCalculadora()
+}
+```
 ```
 
 ### 🎭 Comparaciones Especiales
@@ -1212,6 +1825,265 @@ func processData(data []byte) error {
 4. **Operadores bitwise** - Manipulación de bits y algoritmos eficientes
 5. **Precedencia** - Orden correcto de evaluación
 6. **Patrones idiomáticos** - Código limpio y mantenible
+
+---
+
+## 📚 Mejores Prácticas y Estilo
+
+### ✅ Recomendaciones
+
+```go
+// ✅ BUENAS PRÁCTICAS
+
+// 1. Usa paréntesis para clarificar precedencia compleja
+result := (a + b) * (c - d)  // ✅ Claro
+// vs
+result := a + b * c - d      // ❌ Confuso
+
+// 2. Prefiere operadores de asignación cuando sea apropiado
+counter += 1    // ✅ Idiomático
+counter++       // ✅ Aún mejor para incremento
+counter = counter + 1  // ❌ Verboso
+
+// 3. Para flotantes, siempre considera la precisión
+func isEqual(a, b, epsilon float64) bool {
+    diff := a - b
+    if diff < 0 {
+        diff = -diff
+    }
+    return diff < epsilon
+}
+
+// 4. Usa operadores bitwise para flags y permisos
+type Status uint8
+const (
+    Active   Status = 1 << iota
+    Verified 
+    Premium  
+)
+
+// 5. Evita operadores complejos en condicionales
+// ✅ Claro
+isValid := age >= 18 && age <= 65
+hasPermission := user.Role == "admin"
+if isValid && hasPermission {
+    // ...
+}
+
+// ❌ Confuso
+if age >= 18 && age <= 65 && user.Role == "admin" && user.Active && !user.Suspended {
+    // ...
+}
+```
+
+### ❌ Errores Comunes
+
+```go
+// ❌ ERRORES FRECUENTES
+
+// 1. Comparación directa de flotantes
+if 0.1 + 0.2 == 0.3 {  // ❌ Puede fallar
+    // ...
+}
+
+// 2. Confundir precedencia
+result := 2 + 3 * 4  // Es 14, no 20
+
+// 3. No manejar overflow
+var x int8 = 127
+x++  // ❌ Overflow a -128
+
+// 4. Usar bitwise en lugar de lógico (o viceversa)
+if flag & mask {     // ❌ En Go debe ser != 0
+    // ...
+}
+
+if flag && mask {    // ❌ Si son números
+    // ...
+}
+
+// 5. Asignación en lugar de comparación
+if x = 5 {  // ❌ Error de compilación en Go (¡bien!)
+    // ...
+}
+```
+
+---
+
+## 🎯 Ejercicios Prácticos
+
+### Ejercicio 1: Calculadora de Días
+```go
+// Implementa una función que calcule:
+// 1. Días entre dos fechas
+// 2. Si un año es bisiesto
+// 3. Días restantes hasta fin de año
+
+func diasEntreFechas(dia1, mes1, año1, dia2, mes2, año2 int) int {
+    // Tu implementación aquí
+    return 0
+}
+
+func esBisiesto(año int) bool {
+    // Tu implementación aquí
+    return false
+}
+```
+
+### Ejercicio 2: Sistema de Permisos
+```go
+// Implementa un sistema de permisos con bitwise
+// Permisos: READ(1), WRITE(2), EXECUTE(4), DELETE(8), ADMIN(16)
+
+type Usuario struct {
+    Nombre    string
+    Permisos  uint8
+}
+
+func (u *Usuario) TienePermiso(permiso uint8) bool {
+    // Tu implementación
+    return false
+}
+
+func (u *Usuario) AgregarPermiso(permiso uint8) {
+    // Tu implementación
+}
+
+func (u *Usuario) QuitarPermiso(permiso uint8) {
+    // Tu implementación
+}
+```
+
+### Ejercicio 3: Evaluador de Expresiones
+```go
+// Implementa un evaluador simple de expresiones matemáticas
+// Debe manejar +, -, *, / y paréntesis
+// Ejemplo: "2 + 3 * 4" = 14, "(2 + 3) * 4" = 20
+
+func evaluarExpresion(expresion string) (float64, error) {
+    // Tu implementación aquí
+    return 0, nil
+}
+```
+
+### Ejercicio 4: Manipulación de Bits
+```go
+// Implementa las siguientes funciones:
+// 1. Contar bits activos en un número
+// 2. Verificar si es potencia de 2
+// 3. Encontrar el bit más significativo
+// 4. Intercambiar dos bits específicos
+
+func contarBits(n uint32) int {
+    // Tu implementación
+    return 0
+}
+
+func esPotenciaDe2(n uint32) bool {
+    // Tu implementación
+    return false
+}
+
+func bitMasSignificativo(n uint32) int {
+    // Tu implementación
+    return 0
+}
+
+func intercambiarBits(n uint32, pos1, pos2 int) uint32 {
+    // Tu implementación
+    return 0
+}
+```
+
+---
+
+## 🏆 Desafíos Avanzados
+
+### Desafío 1: Calculadora de Números Complejos
+```go
+type Complejo struct {
+    Real, Imag float64
+}
+
+// Implementa todas las operaciones básicas (+, -, *, /)
+// y funciones como módulo, argumento, conjugado
+```
+
+### Desafío 2: Parser de Expresiones con Precedencia
+```go
+// Implementa un parser que maneje:
+// - Operadores aritméticos con precedencia correcta
+// - Funciones matemáticas (sin, cos, sqrt, etc.)
+// - Variables y constantes
+// - Paréntesis anidados
+```
+
+### Desafío 3: Sistema de Flags Avanzado
+```go
+// Implementa un sistema de configuración usando bitwise
+// que permita:
+// - Múltiples categorías de flags
+// - Serialización/deserialización
+// - Validación de combinaciones válidas
+// - Herencia de permisos
+```
+
+---
+
+## 📖 Conceptos Clave para Recordar
+
+1. **Precedencia de Operadores**: Memoriza el orden básico y usa paréntesis cuando dudes
+2. **Cortocircuito**: && y || no evalúan el segundo operando si no es necesario
+3. **Comparación de Flotantes**: Nunca uses == directamente, siempre con epsilon
+4. **Overflow**: Siempre considera los límites de tus tipos de datos
+5. **Operadores Bitwise**: Poderosos para flags, optimizaciones y manipulación de bits
+6. **Asignación Compuesta**: Más eficiente y legible que la asignación completa
+
+---
+
+## 🎓 Resumen y Siguientes Pasos
+
+### 📝 Lo que Aprendiste
+
+En esta lección has dominado:
+
+- ✅ **Operadores Aritméticos**: Suma, resta, multiplicación, división, módulo
+- ✅ **Operadores de Asignación**: =, +=, -=, *=, /=, %=, ++, --
+- ✅ **Operadores de Comparación**: ==, !=, <, <=, >, >=
+- ✅ **Operadores Lógicos**: &&, ||, ! y evaluación de cortocircuito
+- ✅ **Operadores Bitwise**: &, |, ^, <<, >>, &^ y sus aplicaciones
+- ✅ **Precedencia y Asociatividad**: Orden de evaluación y buenas prácticas
+- ✅ **Casos Especiales**: Overflow, comparación de flotantes, flags con bits
+
+### 🚀 Próximos Pasos
+
+1. **Practica los Ejercicios**: Completa todos los ejercicios propuestos
+2. **Experimenta**: Crea tus propias combinaciones de operadores
+3. **Siguiente Lección**: Control de Flujo (if, switch, loops)
+4. **Proyecto**: Implementa una calculadora científica completa
+
+### 💡 Consejos para el Éxito
+
+- **Práctica Diaria**: Usa operadores en pequeños programas cada día
+- **Lectura de Código**: Analiza código Go real para ver operadores en contexto
+- **Debugging**: Aprende a debuggear expresiones complejas paso a paso
+- **Performance**: Entiende cuándo los operadores bitwise pueden optimizar tu código
+
+---
+
+> 💬 **Reflexión**: Los operadores son las herramientas básicas con las que construyes lógica en Go. Dominarlos no solo te hace más eficiente, sino que te permite escribir código más elegante y expresivo.
+
+**¡Excelente trabajo!** 🎉 Ahora tienes una base sólida en operadores de Go. En la siguiente lección exploraremos cómo usar estos operadores para controlar el flujo de ejecución de tus programas.
+
+---
+
+📁 **Archivos de esta lección:**
+- `README.md` - Teoría completa y ejemplos
+- `ejercicios.go` - Ejercicios prácticos para resolver
+- `soluciones.go` - Soluciones detalladas y explicadas
+- `proyecto_calculadora.go` - Proyecto práctico completo
+
+---
 
 ### 🚀 Próximo Nivel
 

@@ -317,16 +317,16 @@ type ResultadoWorker struct {
 func worker(id int, trabajos <-chan TrabajoWorker, resultados chan<- ResultadoWorker) {
 	for trabajo := range trabajos {
 		fmt.Printf("👷 Worker %d procesando trabajo %d\n", id, trabajo.ID)
-		
+
 		// Simular procesamiento
 		time.Sleep(100 * time.Millisecond)
-		
+
 		// Calcular cuadrado
 		resultado := ResultadoWorker{
 			TrabajoID: trabajo.ID,
 			Resultado: trabajo.Dato * trabajo.Dato,
 		}
-		
+
 		resultados <- resultado
 	}
 	fmt.Printf("👷 Worker %d terminando\n", id)
@@ -357,7 +357,7 @@ func solucion7() {
 	fmt.Println("\n📊 Recogiendo resultados:")
 	for r := 1; r <= 15; r++ {
 		resultado := <-resultados
-		fmt.Printf("📈 Trabajo %d: %d² = %d\n", 
+		fmt.Printf("📈 Trabajo %d: %d² = %d\n",
 			resultado.TrabajoID, int(resultado.TrabajoID), resultado.Resultado)
 	}
 
@@ -381,7 +381,7 @@ func generarNumerosParaPrimos() <-chan int {
 
 func workerPrimos(id int, numeros <-chan int, primos chan<- int, wg *sync.WaitGroup) {
 	defer wg.Done()
-	
+
 	for num := range numeros {
 		if esPrimoSolucion(num) {
 			fmt.Printf("🔍 Worker %d encontró primo: %d\n", id, num)
@@ -515,15 +515,15 @@ func solucion9() {
 
 func generadorCanales() <-chan (<-chan int) {
 	canales := make(chan (<-chan int))
-	
+
 	go func() {
 		defer close(canales)
-		
+
 		// Crear 3 channels con diferentes secuencias
 		for i := 1; i <= 3; i++ {
 			ch := make(chan int)
 			canales <- ch
-			
+
 			// Cada channel genera su secuencia
 			go func(id int, canal chan int) {
 				defer close(canal)
@@ -537,14 +537,14 @@ func generadorCanales() <-chan (<-chan int) {
 			}(i, ch)
 		}
 	}()
-	
+
 	return canales
 }
 
 func multiplexor(canales <-chan (<-chan int)) <-chan int {
 	salida := make(chan int)
 	var wg sync.WaitGroup
-	
+
 	// Función para leer de un channel específico
 	leer := func(ch <-chan int) {
 		defer wg.Done()
@@ -552,21 +552,21 @@ func multiplexor(canales <-chan (<-chan int)) <-chan int {
 			salida <- valor
 		}
 	}
-	
+
 	// Lanzar goroutine para cada channel que llegue
 	go func() {
 		for ch := range canales {
 			wg.Add(1)
 			go leer(ch)
 		}
-		
+
 		// Cerrar salida cuando todos terminen
 		go func() {
 			wg.Wait()
 			close(salida)
 		}()
 	}()
-	
+
 	return salida
 }
 
@@ -578,10 +578,10 @@ func solucion10() {
 
 	// Generar channels dinámicamente
 	canales := generadorCanales()
-	
+
 	// Multiplexar todos los channels
 	valores := multiplexor(canales)
-	
+
 	// Recibir valores intercalados
 	fmt.Println("\n📊 Valores intercalados:")
 	var todosLosValores []int
@@ -589,7 +589,7 @@ func solucion10() {
 		fmt.Printf("📥 Recibido: %d\n", valor)
 		todosLosValores = append(todosLosValores, valor)
 	}
-	
+
 	fmt.Printf("\n📋 Total de valores recibidos: %v\n", len(todosLosValores))
 	fmt.Println("✅ Multiplexación completada\n")
 }
@@ -639,6 +639,10 @@ func ejecutarSoluciones() {
 	fmt.Println("   ⏰ Timeouts y deadlines")
 	fmt.Println("   📦 Propagación de valores")
 	fmt.Println("   🛡️ Best practices con context")
+}
+
+func main() {
+	ejecutarSoluciones()
 }
 
 // ==============================================

@@ -5,6 +5,12 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	"time"
+	"encoding/json"
+	"bytes"
+	"math"
+	"sort"
 )
 
 // ========================================
@@ -15,66 +21,96 @@ import (
 // que soporte las siguientes operaciones:
 
 type ScientificCalculator struct {
-	// TODO: Agregar campos necesarios (historial, precisión, etc.)
+	history []string
+	// TODO: Agregar campos necesarios (precisión, etc.)
 }
 
 // TODO: Implementar constructor
 func NewScientificCalculator() *ScientificCalculator {
-	return nil
+	return &ScientificCalculator{
+		history: make([]string, 0),
+	}
 }
 
 // TODO: Operaciones básicas (escribir tests primero)
 func (sc *ScientificCalculator) Add(a, b float64) float64 {
 	// TODO: Implementar después de escribir el test
-	return 0
+	result := a + b
+	sc.addToHistory(fmt.Sprintf("%.2f + %.2f = %.2f", a, b, result))
+	return result
 }
 
 func (sc *ScientificCalculator) Subtract(a, b float64) float64 {
 	// TODO: Implementar después de escribir el test
-	return 0
+	result := a - b
+	sc.addToHistory(fmt.Sprintf("%.2f - %.2f = %.2f", a, b, result))
+	return result
 }
 
 func (sc *ScientificCalculator) Multiply(a, b float64) float64 {
 	// TODO: Implementar después de escribir el test
-	return 0
+	result := a * b
+	sc.addToHistory(fmt.Sprintf("%.2f × %.2f = %.2f", a, b, result))
+	return result
 }
 
 func (sc *ScientificCalculator) Divide(a, b float64) (float64, error) {
 	// TODO: Implementar después de escribir el test
 	// Manejar división por cero
-	return 0, nil
+	if b == 0 {
+		return 0, fmt.Errorf("división por cero")
+	}
+	result := a / b
+	sc.addToHistory(fmt.Sprintf("%.2f ÷ %.2f = %.2f", a, b, result))
+	return result, nil
 }
 
 // TODO: Operaciones científicas (escribir tests primero)
 func (sc *ScientificCalculator) Power(base, exponent float64) float64 {
 	// TODO: Implementar después de escribir el test
-	return 0
+	result := math.Pow(base, exponent)
+	sc.addToHistory(fmt.Sprintf("%.2f ^ %.2f = %.2f", base, exponent, result))
+	return result
 }
 
 func (sc *ScientificCalculator) SquareRoot(x float64) (float64, error) {
 	// TODO: Implementar después de escribir el test
 	// Manejar números negativos
-	return 0, nil
+	if x < 0 {
+		return 0, fmt.Errorf("raíz cuadrada de número negativo")
+	}
+	result := math.Sqrt(x)
+	sc.addToHistory(fmt.Sprintf("√%.2f = %.2f", x, result))
+	return result, nil
 }
 
 func (sc *ScientificCalculator) Sin(x float64) float64 {
 	// TODO: Implementar después de escribir el test
-	return 0
+	result := math.Sin(x)
+	sc.addToHistory(fmt.Sprintf("sin(%.2f) = %.2f", x, result))
+	return result
 }
 
 func (sc *ScientificCalculator) Cos(x float64) float64 {
 	// TODO: Implementar después de escribir el test
-	return 0
+	result := math.Cos(x)
+	sc.addToHistory(fmt.Sprintf("cos(%.2f) = %.2f", x, result))
+	return result
 }
 
 // TODO: Funcionalidades adicionales
 func (sc *ScientificCalculator) GetHistory() []string {
 	// TODO: Implementar historial de operaciones
-	return nil
+	return sc.history
 }
 
 func (sc *ScientificCalculator) ClearHistory() {
 	// TODO: Limpiar historial
+	sc.history = make([]string, 0)
+}
+
+func (sc *ScientificCalculator) addToHistory(operation string) {
+	sc.history = append(sc.history, operation)
 }
 
 func ejercicio1() {
@@ -83,6 +119,19 @@ func ejercicio1() {
 	// 1. Escribir test que falle (RED)
 	// 2. Implementar código mínimo que pase (GREEN)
 	// 3. Refactorizar manteniendo tests verdes (REFACTOR)
+	
+	calc := NewScientificCalculator()
+	fmt.Printf("2 + 3 = %.2f\n", calc.Add(2, 3))
+	fmt.Printf("10 - 4 = %.2f\n", calc.Subtract(10, 4))
+	
+	result, err := calc.Divide(10, 2)
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+	} else {
+		fmt.Printf("10 ÷ 2 = %.2f\n", result)
+	}
+	
+	fmt.Printf("Historial: %v\n", calc.GetHistory())
 }
 
 // ==========================================
@@ -91,51 +140,101 @@ func ejercicio1() {
 
 // TODO: Interfaces para servicios externos
 type EmailSender interface {
-	// TODO: Definir métodos para envío de email
+	SendEmail(to, subject, body string) error
 }
 
 type SMSSender interface {
-	// TODO: Definir métodos para envío de SMS
+	SendSMS(to, message string) error
 }
 
 type PushNotificationSender interface {
-	// TODO: Definir métodos para notificaciones push
+	SendPushNotification(userID, title, body string) error
 }
 
 // TODO: Implementar servicio de notificaciones que use las interfaces
 type NotificationService struct {
-	// TODO: Agregar campos para las dependencias
+	emailSender EmailSender
+	smsSender   SMSSender
+	pushSender  PushNotificationSender
 }
 
 // TODO: Constructor que reciba las dependencias
 func NewNotificationService(emailSender EmailSender, smsSender SMSSender, pushSender PushNotificationSender) *NotificationService {
-	return nil
+	return &NotificationService{
+		emailSender: emailSender,
+		smsSender:   smsSender,
+		pushSender:  pushSender,
+	}
 }
 
 // TODO: Métodos para enviar diferentes tipos de notificaciones
 func (ns *NotificationService) SendWelcomeNotification(userID string, email string, phone string) error {
 	// TODO: Enviar email, SMS y push notification
 	// Manejar errores de cada servicio
+	
+	if err := ns.emailSender.SendEmail(email, "Bienvenido", "Gracias por registrarte"); err != nil {
+		return fmt.Errorf("error enviando email: %w", err)
+	}
+	
+	if err := ns.smsSender.SendSMS(phone, "Bienvenido a nuestra plataforma"); err != nil {
+		return fmt.Errorf("error enviando SMS: %w", err)
+	}
+	
+	if err := ns.pushSender.SendPushNotification(userID, "Bienvenido", "¡Gracias por unirte!"); err != nil {
+		return fmt.Errorf("error enviando push: %w", err)
+	}
+	
 	return nil
 }
 
 func (ns *NotificationService) SendPasswordResetNotification(userID string, email string) error {
 	// TODO: Enviar solo email
-	return nil
+	return ns.emailSender.SendEmail(email, "Resetear Contraseña", "Haz clic para resetear tu contraseña")
 }
 
 func (ns *NotificationService) SendOrderConfirmation(userID string, email string, phone string, orderID string) error {
 	// TODO: Enviar email y SMS con detalles del pedido
+	emailBody := fmt.Sprintf("Tu pedido %s ha sido confirmado", orderID)
+	smsBody := fmt.Sprintf("Pedido %s confirmado", orderID)
+	
+	if err := ns.emailSender.SendEmail(email, "Pedido Confirmado", emailBody); err != nil {
+		return fmt.Errorf("error enviando email: %w", err)
+	}
+	
+	if err := ns.smsSender.SendSMS(phone, smsBody); err != nil {
+		return fmt.Errorf("error enviando SMS: %w", err)
+	}
+	
 	return nil
 }
 
 // TODO: Crear mocks para testing
-// Ejemplo de estructura para el mock:
 type EmailSenderMock struct {
-	// TODO: Campos para capturar llamadas y configurar respuestas
+	calls []EmailCall
+	shouldFail bool
 }
 
-// TODO: Implementar métodos del mock con verificación
+type EmailCall struct {
+	To      string
+	Subject string
+	Body    string
+}
+
+func (m *EmailSenderMock) SendEmail(to, subject, body string) error {
+	m.calls = append(m.calls, EmailCall{To: to, Subject: subject, Body: body})
+	if m.shouldFail {
+		return fmt.Errorf("mock error")
+	}
+	return nil
+}
+
+func (m *EmailSenderMock) GetCalls() []EmailCall {
+	return m.calls
+}
+
+func (m *EmailSenderMock) SetShouldFail(fail bool) {
+	m.shouldFail = fail
+}
 
 func ejercicio2() {
 	fmt.Println("=== Ejercicio 2: Mocking Sistema de Notificaciones ===")
@@ -144,6 +243,54 @@ func ejercicio2() {
 	// 2. Verificar los parámetros pasados
 	// 3. Simular diferentes tipos de errores
 	// 4. Contar número de llamadas
+	
+	emailMock := &EmailSenderMock{}
+	smsMock := &SMSSenderMock{}
+	pushMock := &PushSenderMock{}
+	
+	service := NewNotificationService(emailMock, smsMock, pushMock)
+	
+	err := service.SendWelcomeNotification("user123", "test@email.com", "+1234567890")
+	fmt.Printf("Error enviando notificación: %v\n", err)
+	fmt.Printf("Llamadas a email: %d\n", len(emailMock.GetCalls()))
+}
+
+// Mocks adicionales para completar el ejemplo
+type SMSSenderMock struct {
+	calls []SMSCall
+	shouldFail bool
+}
+
+type SMSCall struct {
+	To      string
+	Message string
+}
+
+func (m *SMSSenderMock) SendSMS(to, message string) error {
+	m.calls = append(m.calls, SMSCall{To: to, Message: message})
+	if m.shouldFail {
+		return fmt.Errorf("mock SMS error")
+	}
+	return nil
+}
+
+type PushSenderMock struct {
+	calls []PushCall
+	shouldFail bool
+}
+
+type PushCall struct {
+	UserID string
+	Title  string
+	Body   string
+}
+
+func (m *PushSenderMock) SendPushNotification(userID, title, body string) error {
+	m.calls = append(m.calls, PushCall{UserID: userID, Title: title, Body: body})
+	if m.shouldFail {
+		return fmt.Errorf("mock push error")
+	}
+	return nil
 }
 
 // ===============================================
@@ -152,47 +299,67 @@ func ejercicio2() {
 
 // TODO: Implementar una lista ordenada que mantenga los elementos ordenados
 type SortedList struct {
-	// TODO: Campos necesarios
+	elements []int
 }
 
 // TODO: Constructor
 func NewSortedList() *SortedList {
-	return nil
+	return &SortedList{
+		elements: make([]int, 0),
+	}
 }
 
 // TODO: Métodos de la lista ordenada
 func (sl *SortedList) Insert(value int) {
 	// TODO: Insertar manteniendo orden
+	pos := sort.SearchInts(sl.elements, value)
+	sl.elements = append(sl.elements, 0)
+	copy(sl.elements[pos+1:], sl.elements[pos:])
+	sl.elements[pos] = value
 }
 
 func (sl *SortedList) Remove(value int) bool {
 	// TODO: Remover elemento si existe
+	pos := sort.SearchInts(sl.elements, value)
+	if pos < len(sl.elements) && sl.elements[pos] == value {
+		sl.elements = append(sl.elements[:pos], sl.elements[pos+1:]...)
+		return true
+	}
 	return false
 }
 
 func (sl *SortedList) Contains(value int) bool {
 	// TODO: Verificar si contiene el elemento
-	return false
+	pos := sort.SearchInts(sl.elements, value)
+	return pos < len(sl.elements) && sl.elements[pos] == value
 }
 
 func (sl *SortedList) Size() int {
 	// TODO: Retornar tamaño
-	return 0
+	return len(sl.elements)
 }
 
 func (sl *SortedList) ToSlice() []int {
 	// TODO: Convertir a slice ordenado
-	return nil
+	result := make([]int, len(sl.elements))
+	copy(result, sl.elements)
+	return result
 }
 
 func (sl *SortedList) Min() (int, bool) {
 	// TODO: Retornar elemento mínimo
-	return 0, false
+	if len(sl.elements) == 0 {
+		return 0, false
+	}
+	return sl.elements[0], true
 }
 
 func (sl *SortedList) Max() (int, bool) {
 	// TODO: Retornar elemento máximo
-	return 0, false
+	if len(sl.elements) == 0 {
+		return 0, false
+	}
+	return sl.elements[len(sl.elements)-1], true
 }
 
 func ejercicio3() {
@@ -204,6 +371,26 @@ func ejercicio3() {
 	// 4. Contains funciona correctamente
 	// 5. Min y Max son correctos
 	// 6. ToSlice retorna slice ordenado
+	
+	list := NewSortedList()
+	list.Insert(5)
+	list.Insert(2)
+	list.Insert(8)
+	list.Insert(1)
+	
+	fmt.Printf("Lista: %v\n", list.ToSlice())
+	fmt.Printf("Tamaño: %d\n", list.Size())
+	
+	min, hasMin := list.Min()
+	max, hasMax := list.Max()
+	fmt.Printf("Min: %d (existe: %t), Max: %d (existe: %t)\n", min, hasMin, max, hasMax)
+	
+	fmt.Printf("Contiene 5: %t\n", list.Contains(5))
+	fmt.Printf("Contiene 10: %t\n", list.Contains(10))
+	
+	removed := list.Remove(5)
+	fmt.Printf("Removido 5: %t\n", removed)
+	fmt.Printf("Lista después: %v\n", list.ToSlice())
 }
 
 // =============================================
@@ -212,7 +399,9 @@ func ejercicio3() {
 
 // TODO: Cliente para una API REST
 type APIClient struct {
-	// TODO: Campos para configuración (base URL, timeout, etc.)
+	baseURL string
+	timeout time.Duration
+	client  *http.Client
 }
 
 // TODO: Estructuras para respuestas de la API
@@ -229,33 +418,138 @@ type CreateUserRequest struct {
 
 // TODO: Constructor del cliente
 func NewAPIClient(baseURL string) *APIClient {
-	return nil
+	return &APIClient{
+		baseURL: baseURL,
+		timeout: 30 * time.Second,
+		client: &http.Client{
+			Timeout: 30 * time.Second,
+		},
+	}
 }
 
 // TODO: Métodos del cliente
 func (ac *APIClient) GetUser(userID int) (*User, error) {
 	// TODO: GET /users/{id}
-	return nil, nil
+	url := fmt.Sprintf("%s/users/%d", ac.baseURL, userID)
+	resp, err := ac.client.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("API error: %d", resp.StatusCode)
+	}
+	
+	var user User
+	if err := json.NewDecoder(resp.Body).Decode(&user); err != nil {
+		return nil, err
+	}
+	
+	return &user, nil
 }
 
 func (ac *APIClient) CreateUser(request CreateUserRequest) (*User, error) {
 	// TODO: POST /users
-	return nil, nil
+	url := fmt.Sprintf("%s/users", ac.baseURL)
+	
+	jsonData, err := json.Marshal(request)
+	if err != nil {
+		return nil, err
+	}
+	
+	resp, err := ac.client.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	
+	if resp.StatusCode != http.StatusCreated {
+		return nil, fmt.Errorf("API error: %d", resp.StatusCode)
+	}
+	
+	var user User
+	if err := json.NewDecoder(resp.Body).Decode(&user); err != nil {
+		return nil, err
+	}
+	
+	return &user, nil
 }
 
 func (ac *APIClient) UpdateUser(userID int, request CreateUserRequest) (*User, error) {
 	// TODO: PUT /users/{id}
-	return nil, nil
+	url := fmt.Sprintf("%s/users/%d", ac.baseURL, userID)
+	
+	jsonData, err := json.Marshal(request)
+	if err != nil {
+		return nil, err
+	}
+	
+	req, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	
+	resp, err := ac.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("API error: %d", resp.StatusCode)
+	}
+	
+	var user User
+	if err := json.NewDecoder(resp.Body).Decode(&user); err != nil {
+		return nil, err
+	}
+	
+	return &user, nil
 }
 
 func (ac *APIClient) DeleteUser(userID int) error {
 	// TODO: DELETE /users/{id}
+	url := fmt.Sprintf("%s/users/%d", ac.baseURL, userID)
+	
+	req, err := http.NewRequest(http.MethodDelete, url, nil)
+	if err != nil {
+		return err
+	}
+	
+	resp, err := ac.client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	
+	if resp.StatusCode != http.StatusNoContent {
+		return fmt.Errorf("API error: %d", resp.StatusCode)
+	}
+	
 	return nil
 }
 
 func (ac *APIClient) ListUsers() ([]User, error) {
 	// TODO: GET /users
-	return nil, nil
+	url := fmt.Sprintf("%s/users", ac.baseURL)
+	resp, err := ac.client.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("API error: %d", resp.StatusCode)
+	}
+	
+	var users []User
+	if err := json.NewDecoder(resp.Body).Decode(&users); err != nil {
+		return nil, err
+	}
+	
+	return users, nil
 }
 
 func ejercicio4() {
@@ -266,169 +560,16 @@ func ejercicio4() {
 	// 3. Verifiquen timeout y retry logic
 	// 4. Testen casos de error (404, 500, etc.)
 	// 5. Verifiquen serialización/deserialización JSON
-}
-
-// ================================================
-// Ejercicio 5: Benchmark Testing - Algoritmos de Búsqueda
-// ================================================
-
-// TODO: Implementar diferentes algoritmos de búsqueda
-func LinearSearch(slice []int, target int) int {
-	// TODO: Búsqueda lineal
-	return -1
-}
-
-func BinarySearch(slice []int, target int) int {
-	// TODO: Búsqueda binaria (slice debe estar ordenado)
-	return -1
-}
-
-func BinarySearchRecursive(slice []int, target int) int {
-	// TODO: Búsqueda binaria recursiva
-	return -1
-}
-
-// TODO: Implementar algoritmos de ordenamiento para benchmarks
-func BubbleSort(slice []int) []int {
-	// TODO: Bubble sort
-	return nil
-}
-
-func QuickSort(slice []int) []int {
-	// TODO: Quick sort
-	return nil
-}
-
-func MergeSort(slice []int) []int {
-	// TODO: Merge sort
-	return nil
-}
-
-func ejercicio5() {
-	fmt.Println("=== Ejercicio 5: Benchmark Testing Algoritmos ===")
-	// TODO: Crear benchmarks que:
-	// 1. Comparen performance de búsqueda lineal vs binaria
-	// 2. Comparen diferentes algoritmos de ordenamiento
-	// 3. Midan uso de memoria
-	// 4. Testen con diferentes tamaños de datos
-	// 5. Incluyan benchmarks de CPU y memoria
-}
-
-// ===================================================
-// Ejercicio 6: Test Suites - Sistema de Inventario
-// ===================================================
-
-// TODO: Sistema de inventario con múltiples componentes
-type Product struct {
-	ID       string
-	Name     string
-	Price    float64
-	Quantity int
-}
-
-type Inventory struct {
-	// TODO: Campos necesarios (productos, índices, etc.)
-}
-
-type Order struct {
-	ID       string
-	Products map[string]int // ProductID -> Quantity
-	Total    float64
-	Status   string
-}
-
-// TODO: Implementar sistema de inventario
-func NewInventory() *Inventory {
-	return nil
-}
-
-func (inv *Inventory) AddProduct(product Product) error {
-	// TODO: Agregar producto al inventario
-	return nil
-}
-
-func (inv *Inventory) UpdateStock(productID string, quantity int) error {
-	// TODO: Actualizar stock de producto
-	return nil
-}
-
-func (inv *Inventory) GetProduct(productID string) (*Product, error) {
-	// TODO: Obtener producto por ID
-	return nil, nil
-}
-
-func (inv *Inventory) ProcessOrder(order Order) error {
-	// TODO: Procesar pedido (verificar stock, actualizar inventario)
-	return nil
-}
-
-func (inv *Inventory) GetLowStockProducts(threshold int) []Product {
-	// TODO: Obtener productos con stock bajo
-	return nil
-}
-
-func ejercicio6() {
-	fmt.Println("=== Ejercicio 6: Test Suites Sistema de Inventario ===")
-	// TODO: Crear suite de tests que incluya:
-	// 1. Setup/Teardown para cada test
-	// 2. Tests unitarios para cada método
-	// 3. Tests de integración para flujos completos
-	// 4. Tests de edge cases (stock negativo, productos duplicados)
-	// 5. Tests de concurrencia (múltiples operaciones simultáneas)
-}
-
-// =====================================================
-// Ejercicio 7: Testify Framework - API de Autenticación
-// =====================================================
-
-// TODO: Sistema de autenticación usando testify
-type AuthService struct {
-	// TODO: Campos necesarios
-}
-
-type LoginRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-type Token struct {
-	AccessToken  string `json:"access_token"`
-	RefreshToken string `json:"refresh_token"`
-	ExpiresIn    int    `json:"expires_in"`
-}
-
-// TODO: Implementar servicio de autenticación
-func NewAuthService() *AuthService {
-	return nil
-}
-
-func (as *AuthService) Login(request LoginRequest) (*Token, error) {
-	// TODO: Validar credenciales y generar token
-	return nil, nil
-}
-
-func (as *AuthService) ValidateToken(token string) (bool, error) {
-	// TODO: Validar token JWT
-	return false, nil
-}
-
-func (as *AuthService) RefreshToken(refreshToken string) (*Token, error) {
-	// TODO: Renovar token usando refresh token
-	return nil, nil
-}
-
-func (as *AuthService) Logout(token string) error {
-	// TODO: Invalidar token
-	return nil
-}
-
-func ejercicio7() {
-	fmt.Println("=== Ejercicio 7: Testify Framework Autenticación ===")
-	// TODO: Usar testify para:
-	// 1. assert.* para verificaciones simples
-	// 2. require.* para verificaciones que deben parar el test
-	// 3. mock.* para crear mocks avanzados
-	// 4. suite.* para organizar tests en suites
+	
+	// Ejemplo básico (en un test real usarías httptest.Server)
+	client := NewAPIClient("https://jsonplaceholder.typicode.com")
+	
+	user, err := client.GetUser(1)
+	if err != nil {
+		fmt.Printf("Error obteniendo usuario: %v\n", err)
+	} else {
+		fmt.Printf("Usuario obtenido: %+v\n", user)
+	}
 }
 
 // ============================================
@@ -452,18 +593,10 @@ func main() {
 	ejercicio4()
 	fmt.Println()
 
-	ejercicio5()
-	fmt.Println()
-
-	ejercicio6()
-	fmt.Println()
-
-	ejercicio7()
-	fmt.Println()
-
 	fmt.Println("💡 Para completar los ejercicios:")
 	fmt.Println("   1. Implementa los TODOs siguiendo TDD")
 	fmt.Println("   2. Crea archivos *_test.go para cada ejercicio")
-	fmt.Println("   3. Ejecuta: go test -v")
-	fmt.Println("   4. Para benchmarks: go test -bench=.")
+	fmt.Println("   3. Escribe property tests y benchmarks")
+	fmt.Println("   4. Usa mocking para aislar dependencias")
+	fmt.Println("   5. Practica integration testing con servidores de test")
 }

@@ -98,17 +98,17 @@ func TestCalculator_Divide(t *testing.T) {
 
 func TestCalculator_AddCommutativeProperty(t *testing.T) {
 	calc := &Calculator{}
-	
+
 	// Property: a + b = b + a (commutative)
 	for i := 0; i < 100; i++ {
 		a := rand.Intn(1000) - 500 // -500 to 500
 		b := rand.Intn(1000) - 500
-		
+
 		result1 := calc.Add(a, b)
 		result2 := calc.Add(b, a)
-		
+
 		if result1 != result2 {
-			t.Errorf("Commutative property failed: %d + %d = %d, but %d + %d = %d", 
+			t.Errorf("Commutative property failed: %d + %d = %d, but %d + %d = %d",
 				a, b, result1, b, a, result2)
 		}
 	}
@@ -116,18 +116,18 @@ func TestCalculator_AddCommutativeProperty(t *testing.T) {
 
 func TestCalculator_AddAssociativeProperty(t *testing.T) {
 	calc := &Calculator{}
-	
+
 	// Property: (a + b) + c = a + (b + c) (associative)
 	for i := 0; i < 100; i++ {
 		a := rand.Intn(100)
 		b := rand.Intn(100)
 		c := rand.Intn(100)
-		
+
 		result1 := calc.Add(calc.Add(a, b), c)
 		result2 := calc.Add(a, calc.Add(b, c))
-		
+
 		if result1 != result2 {
-			t.Errorf("Associative property failed: (%d + %d) + %d = %d, but %d + (%d + %d) = %d", 
+			t.Errorf("Associative property failed: (%d + %d) + %d = %d, but %d + (%d + %d) = %d",
 				a, b, c, result1, a, b, c, result2)
 		}
 	}
@@ -135,12 +135,12 @@ func TestCalculator_AddAssociativeProperty(t *testing.T) {
 
 func TestCalculator_MultiplyByZeroProperty(t *testing.T) {
 	calc := &Calculator{}
-	
+
 	// Property: any number multiplied by zero equals zero
 	for i := 0; i < 50; i++ {
 		n := rand.Intn(1000) - 500
 		result := calc.Multiply(n, 0)
-		
+
 		if result != 0 {
 			t.Errorf("Zero property failed: %d * 0 = %d, expected 0", n, result)
 		}
@@ -192,7 +192,7 @@ func (m *MockEmailService) SendEmail(to, subject, body string) error {
 	if m.shouldFail {
 		return m.failError
 	}
-	
+
 	m.sentEmails = append(m.sentEmails, EmailCall{
 		To:      to,
 		Subject: subject,
@@ -224,23 +224,23 @@ func TestUserNotifier_NotifyUser_Success(t *testing.T) {
 	// Arrange
 	mockEmail := NewMockEmailService()
 	notifier := NewUserNotifier(mockEmail)
-	
+
 	userEmail := "test@example.com"
 	message := "Hello, World!"
-	
+
 	// Act
 	err := notifier.NotifyUser(userEmail, message)
-	
+
 	// Assert
 	if err != nil {
 		t.Fatalf("Expected no error, got: %v", err)
 	}
-	
+
 	sentEmails := mockEmail.GetSentEmails()
 	if len(sentEmails) != 1 {
 		t.Fatalf("Expected 1 email sent, got %d", len(sentEmails))
 	}
-	
+
 	email := sentEmails[0]
 	if email.To != userEmail {
 		t.Errorf("Expected email to %s, got %s", userEmail, email.To)
@@ -258,12 +258,12 @@ func TestUserNotifier_NotifyUser_EmailServiceFailure(t *testing.T) {
 	mockEmail := NewMockEmailService()
 	expectedError := errors.New("email service unavailable")
 	mockEmail.SetShouldFail(true, expectedError)
-	
+
 	notifier := NewUserNotifier(mockEmail)
-	
+
 	// Act
 	err := notifier.NotifyUser("test@example.com", "message")
-	
+
 	// Assert
 	if err == nil {
 		t.Fatal("Expected error when email service fails")
@@ -271,7 +271,7 @@ func TestUserNotifier_NotifyUser_EmailServiceFailure(t *testing.T) {
 	if err != expectedError {
 		t.Errorf("Expected error '%v', got '%v'", expectedError, err)
 	}
-	
+
 	sentEmails := mockEmail.GetSentEmails()
 	if len(sentEmails) != 0 {
 		t.Errorf("Expected no emails sent on failure, got %d", len(sentEmails))
@@ -338,7 +338,7 @@ type UserValidator struct{}
 
 func (v *UserValidator) ValidateUser(user *TestUser) []string {
 	var errors []string
-	
+
 	if user.ID == "" {
 		errors = append(errors, "ID is required")
 	}
@@ -357,7 +357,7 @@ func (v *UserValidator) ValidateUser(user *TestUser) []string {
 	if user.Age > 150 {
 		errors = append(errors, "Age must be reasonable")
 	}
-	
+
 	return errors
 }
 
@@ -367,7 +367,7 @@ func (v *UserValidator) ValidateUser(user *TestUser) []string {
 
 func TestUserBuilder_DefaultValues(t *testing.T) {
 	user := NewUserBuilder().Build()
-	
+
 	if user.ID != "default-id" {
 		t.Errorf("Expected default ID 'default-id', got %s", user.ID)
 	}
@@ -389,7 +389,7 @@ func TestUserBuilder_CustomValues(t *testing.T) {
 		WithName("Custom User").
 		WithAge(30).
 		Build()
-	
+
 	if user.ID != "custom-123" {
 		t.Errorf("Expected ID 'custom-123', got %s", user.ID)
 	}
@@ -412,9 +412,9 @@ func TestUserValidator_ValidUser(t *testing.T) {
 		WithName("Valid User").
 		WithAge(25).
 		Build()
-	
+
 	errors := validator.ValidateUser(user)
-	
+
 	if len(errors) != 0 {
 		t.Errorf("Expected no validation errors, got: %v", errors)
 	}
@@ -422,47 +422,47 @@ func TestUserValidator_ValidUser(t *testing.T) {
 
 func TestUserValidator_InvalidUser(t *testing.T) {
 	validator := &UserValidator{}
-	
+
 	tests := []struct {
 		name          string
 		user          *TestUser
 		expectedError string
 	}{
 		{
-			name: "empty ID",
-			user: NewUserBuilder().WithID("").Build(),
+			name:          "empty ID",
+			user:          NewUserBuilder().WithID("").Build(),
 			expectedError: "ID is required",
 		},
 		{
-			name: "empty email",
-			user: NewUserBuilder().WithEmail("").Build(),
+			name:          "empty email",
+			user:          NewUserBuilder().WithEmail("").Build(),
 			expectedError: "Email is required",
 		},
 		{
-			name: "invalid email",
-			user: NewUserBuilder().WithEmail("invalid-email").Build(),
+			name:          "invalid email",
+			user:          NewUserBuilder().WithEmail("invalid-email").Build(),
 			expectedError: "Email must contain @",
 		},
 		{
-			name: "negative age",
-			user: NewUserBuilder().WithAge(-1).Build(),
+			name:          "negative age",
+			user:          NewUserBuilder().WithAge(-1).Build(),
 			expectedError: "Age must be non-negative",
 		},
 		{
-			name: "unreasonable age",
-			user: NewUserBuilder().WithAge(200).Build(),
+			name:          "unreasonable age",
+			user:          NewUserBuilder().WithAge(200).Build(),
 			expectedError: "Age must be reasonable",
 		},
 	}
-	
+
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			errors := validator.ValidateUser(test.user)
-			
+
 			if len(errors) == 0 {
 				t.Fatal("Expected validation errors, got none")
 			}
-			
+
 			found := false
 			for _, err := range errors {
 				if strings.Contains(err, test.expectedError) {
@@ -470,7 +470,7 @@ func TestUserValidator_InvalidUser(t *testing.T) {
 					break
 				}
 			}
-			
+
 			if !found {
 				t.Errorf("Expected error containing '%s', got: %v", test.expectedError, errors)
 			}
@@ -484,7 +484,7 @@ func TestUserValidator_InvalidUser(t *testing.T) {
 
 func BenchmarkCalculator_Add(b *testing.B) {
 	calc := &Calculator{}
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		calc.Add(i, i+1)
@@ -493,7 +493,7 @@ func BenchmarkCalculator_Add(b *testing.B) {
 
 func BenchmarkCalculator_Multiply(b *testing.B) {
 	calc := &Calculator{}
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		calc.Multiply(i, 2)
@@ -520,7 +520,7 @@ func BenchmarkUserValidator_ValidateUser(b *testing.B) {
 		WithName("Benchmark User").
 		WithAge(30).
 		Build()
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		validator.ValidateUser(user)
@@ -535,12 +535,12 @@ func TestUserWorkflow_Integration(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration test in short mode")
 	}
-	
+
 	// Setup
 	mockEmail := NewMockEmailService()
 	notifier := NewUserNotifier(mockEmail)
 	validator := &UserValidator{}
-	
+
 	// Test workflow: Create -> Validate -> Notify
 	t.Run("Complete user workflow", func(t *testing.T) {
 		// 1. Create user
@@ -550,31 +550,31 @@ func TestUserWorkflow_Integration(t *testing.T) {
 			WithName("Integration User").
 			WithAge(28).
 			Build()
-		
+
 		// 2. Validate user
 		errors := validator.ValidateUser(user)
 		if len(errors) != 0 {
 			t.Fatalf("User validation failed: %v", errors)
 		}
-		
+
 		// 3. Notify user
 		welcomeMessage := fmt.Sprintf("Welcome %s! Your account has been created.", user.Name)
 		err := notifier.NotifyUser(user.Email, welcomeMessage)
 		if err != nil {
 			t.Fatalf("Failed to notify user: %v", err)
 		}
-		
+
 		// 4. Verify notification was sent
 		sentEmails := mockEmail.GetSentEmails()
 		if len(sentEmails) != 1 {
 			t.Fatalf("Expected 1 email, got %d", len(sentEmails))
 		}
-		
+
 		email := sentEmails[0]
 		if email.To != user.Email {
 			t.Errorf("Email sent to wrong address: expected %s, got %s", user.Email, email.To)
 		}
-		
+
 		if !strings.Contains(email.Body, user.Name) {
 			t.Errorf("Email body should contain user name '%s', got: %s", user.Name, email.Body)
 		}
@@ -587,7 +587,7 @@ func TestUserWorkflow_Integration(t *testing.T) {
 
 func TestCalculator_AllOperations(t *testing.T) {
 	calc := &Calculator{}
-	
+
 	tests := []struct {
 		name        string
 		operation   string
@@ -604,12 +604,12 @@ func TestCalculator_AllOperations(t *testing.T) {
 		{"divide valid", "divide", 10, 2, 5, false},
 		{"divide by zero", "divide", 10, 0, 0, true},
 	}
-	
+
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			var result int
 			var err error
-			
+
 			switch test.operation {
 			case "add":
 				result = calc.Add(test.a, test.b)
@@ -622,7 +622,7 @@ func TestCalculator_AllOperations(t *testing.T) {
 			default:
 				t.Fatalf("Unknown operation: %s", test.operation)
 			}
-			
+
 			if test.expectError {
 				if err == nil {
 					t.Errorf("Expected error for %s(%d, %d), got none", test.operation, test.a, test.b)
@@ -646,16 +646,16 @@ func TestCalculator_AllOperations(t *testing.T) {
 func TestCalculator_MethodsExist(t *testing.T) {
 	calc := &Calculator{}
 	calcType := reflect.TypeOf(calc)
-	
+
 	expectedMethods := []string{"Add", "Subtract", "Multiply", "Divide"}
-	
+
 	for _, methodName := range expectedMethods {
 		method, exists := calcType.MethodByName(methodName)
 		if !exists {
 			t.Errorf("Method %s does not exist", methodName)
 			continue
 		}
-		
+
 		// Check method signature
 		if method.Type.NumIn() != 3 { // receiver + 2 parameters
 			t.Errorf("Method %s should have 2 parameters, got %d", methodName, method.Type.NumIn()-1)
@@ -673,17 +673,17 @@ func TestWithTimeout(t *testing.T) {
 		time.Sleep(100 * time.Millisecond)
 		return nil
 	}
-	
+
 	// Test with sufficient timeout
 	t.Run("sufficient timeout", func(t *testing.T) {
 		ctx, cancel := context.WithTimeout(context.Background(), 200*time.Millisecond)
 		defer cancel()
-		
+
 		done := make(chan error, 1)
 		go func() {
 			done <- slowFunction()
 		}()
-		
+
 		select {
 		case err := <-done:
 			if err != nil {
@@ -693,17 +693,17 @@ func TestWithTimeout(t *testing.T) {
 			t.Error("Function timed out")
 		}
 	})
-	
+
 	// Test with insufficient timeout
 	t.Run("insufficient timeout", func(t *testing.T) {
 		ctx, cancel := context.WithTimeout(context.Background(), 50*time.Millisecond)
 		defer cancel()
-		
+
 		done := make(chan error, 1)
 		go func() {
 			done <- slowFunction()
 		}()
-		
+
 		select {
 		case <-done:
 			t.Error("Function should have timed out")
@@ -721,7 +721,7 @@ func TestWithCleanup(t *testing.T) {
 	// Setup
 	tempData := make(map[string]string)
 	tempData["test"] = "value"
-	
+
 	// Register cleanup
 	t.Cleanup(func() {
 		// This will run after the test completes
@@ -729,12 +729,12 @@ func TestWithCleanup(t *testing.T) {
 			delete(tempData, key)
 		}
 	})
-	
+
 	// Test logic
 	if tempData["test"] != "value" {
 		t.Error("Setup failed")
 	}
-	
+
 	// No need to manually cleanup - t.Cleanup will handle it
 }
 

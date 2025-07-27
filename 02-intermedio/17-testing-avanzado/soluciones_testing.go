@@ -1,6 +1,7 @@
 // 🧪 Soluciones: Testing Avanzado
 // Lección 17: TDD, Mocking y Property Testing
 
+//go:build ignore
 // +build ignore
 
 package main
@@ -135,24 +136,24 @@ func (ns *NotificationService) SendWelcomeNotification(userID string, email stri
 	if err := ns.emailSender.SendEmail(email, "¡Bienvenido!", "Gracias por registrarte en nuestro servicio."); err != nil {
 		return fmt.Errorf("failed to send welcome email: %w", err)
 	}
-	
+
 	// Enviar SMS de bienvenida
 	if err := ns.smsSender.SendSMS(phone, "¡Bienvenido! Tu cuenta ha sido creada exitosamente."); err != nil {
 		return fmt.Errorf("failed to send welcome SMS: %w", err)
 	}
-	
+
 	// Enviar push notification
 	if err := ns.pushSender.SendPushNotification(userID, "¡Bienvenido!", "Tu cuenta está lista para usar."); err != nil {
 		return fmt.Errorf("failed to send welcome push notification: %w", err)
 	}
-	
+
 	return nil
 }
 
 func (ns *NotificationService) SendPasswordResetNotification(userID string, email string) error {
 	subject := "Restablecimiento de contraseña"
 	body := "Haz clic en el enlace para restablecer tu contraseña."
-	
+
 	return ns.emailSender.SendEmail(email, subject, body)
 }
 
@@ -163,13 +164,13 @@ func (ns *NotificationService) SendOrderConfirmation(userID string, email string
 	if err := ns.emailSender.SendEmail(email, emailSubject, emailBody); err != nil {
 		return fmt.Errorf("failed to send order confirmation email: %w", err)
 	}
-	
+
 	// SMS de confirmación
 	smsMessage := fmt.Sprintf("Pedido %s confirmado. Te notificaremos cuando esté listo.", orderID)
 	if err := ns.smsSender.SendSMS(phone, smsMessage); err != nil {
 		return fmt.Errorf("failed to send order confirmation SMS: %w", err)
 	}
-	
+
 	return nil
 }
 
@@ -249,7 +250,7 @@ func NewSortedList() *SortedList {
 func (sl *SortedList) Insert(value int) {
 	// Búsqueda binaria para encontrar posición de inserción
 	pos := sort.SearchInts(sl.items, value)
-	
+
 	// Insertar en la posición correcta
 	sl.items = append(sl.items, 0)
 	copy(sl.items[pos+1:], sl.items[pos:])
@@ -328,107 +329,107 @@ func (ac *APIClient) GetUser(userID int) (*User, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode == http.StatusNotFound {
 		return nil, errors.New("user not found")
 	}
-	
+
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("API error: %d", resp.StatusCode)
 	}
-	
+
 	var user User
 	if err := json.NewDecoder(resp.Body).Decode(&user); err != nil {
 		return nil, err
 	}
-	
+
 	return &user, nil
 }
 
 func (ac *APIClient) CreateUser(request CreateUserRequest) (*User, error) {
 	url := fmt.Sprintf("%s/users", ac.baseURL)
-	
+
 	jsonData, err := json.Marshal(request)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	resp, err := ac.httpClient.Post(url, "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode != http.StatusCreated {
 		return nil, fmt.Errorf("API error: %d", resp.StatusCode)
 	}
-	
+
 	var user User
 	if err := json.NewDecoder(resp.Body).Decode(&user); err != nil {
 		return nil, err
 	}
-	
+
 	return &user, nil
 }
 
 func (ac *APIClient) UpdateUser(userID int, request CreateUserRequest) (*User, error) {
 	url := fmt.Sprintf("%s/users/%d", ac.baseURL, userID)
-	
+
 	jsonData, err := json.Marshal(request)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	req, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(jsonData))
 	if err != nil {
 		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/json")
-	
+
 	resp, err := ac.httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode == http.StatusNotFound {
 		return nil, errors.New("user not found")
 	}
-	
+
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("API error: %d", resp.StatusCode)
 	}
-	
+
 	var user User
 	if err := json.NewDecoder(resp.Body).Decode(&user); err != nil {
 		return nil, err
 	}
-	
+
 	return &user, nil
 }
 
 func (ac *APIClient) DeleteUser(userID int) error {
 	url := fmt.Sprintf("%s/users/%d", ac.baseURL, userID)
-	
+
 	req, err := http.NewRequest(http.MethodDelete, url, nil)
 	if err != nil {
 		return err
 	}
-	
+
 	resp, err := ac.httpClient.Do(req)
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode == http.StatusNotFound {
 		return errors.New("user not found")
 	}
-	
+
 	if resp.StatusCode != http.StatusNoContent {
 		return fmt.Errorf("API error: %d", resp.StatusCode)
 	}
-	
+
 	return nil
 }
 
@@ -439,16 +440,16 @@ func (ac *APIClient) ListUsers() ([]User, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("API error: %d", resp.StatusCode)
 	}
-	
+
 	var users []User
 	if err := json.NewDecoder(resp.Body).Decode(&users); err != nil {
 		return nil, err
 	}
-	
+
 	return users, nil
 }
 
@@ -467,10 +468,10 @@ func LinearSearch(slice []int, target int) int {
 
 func BinarySearch(slice []int, target int) int {
 	left, right := 0, len(slice)-1
-	
+
 	for left <= right {
 		mid := left + (right-left)/2
-		
+
 		if slice[mid] == target {
 			return mid
 		} else if slice[mid] < target {
@@ -479,7 +480,7 @@ func BinarySearch(slice []int, target int) int {
 			right = mid - 1
 		}
 	}
-	
+
 	return -1
 }
 
@@ -491,9 +492,9 @@ func binarySearchHelper(slice []int, target, left, right int) int {
 	if left > right {
 		return -1
 	}
-	
+
 	mid := left + (right-left)/2
-	
+
 	if slice[mid] == target {
 		return mid
 	} else if slice[mid] < target {
@@ -506,7 +507,7 @@ func binarySearchHelper(slice []int, target, left, right int) int {
 func BubbleSort(slice []int) []int {
 	result := make([]int, len(slice))
 	copy(result, slice)
-	
+
 	n := len(result)
 	for i := 0; i < n-1; i++ {
 		for j := 0; j < n-i-1; j++ {
@@ -515,7 +516,7 @@ func BubbleSort(slice []int) []int {
 			}
 		}
 	}
-	
+
 	return result
 }
 
@@ -537,14 +538,14 @@ func quickSortHelper(slice []int, low, high int) {
 func partition(slice []int, low, high int) int {
 	pivot := slice[high]
 	i := low - 1
-	
+
 	for j := low; j < high; j++ {
 		if slice[j] < pivot {
 			i++
 			slice[i], slice[j] = slice[j], slice[i]
 		}
 	}
-	
+
 	slice[i+1], slice[high] = slice[high], slice[i+1]
 	return i + 1
 }
@@ -553,18 +554,18 @@ func MergeSort(slice []int) []int {
 	if len(slice) <= 1 {
 		return slice
 	}
-	
+
 	mid := len(slice) / 2
 	left := MergeSort(slice[:mid])
 	right := MergeSort(slice[mid:])
-	
+
 	return merge(left, right)
 }
 
 func merge(left, right []int) []int {
 	result := make([]int, 0, len(left)+len(right))
 	i, j := 0, 0
-	
+
 	for i < len(left) && j < len(right) {
 		if left[i] <= right[j] {
 			result = append(result, left[i])
@@ -574,10 +575,10 @@ func merge(left, right []int) []int {
 			j++
 		}
 	}
-	
+
 	result = append(result, left[i:]...)
 	result = append(result, right[j:]...)
-	
+
 	return result
 }
 
@@ -613,26 +614,26 @@ func (inv *Inventory) AddProduct(product Product) error {
 	if product.ID == "" {
 		return errors.New("product ID cannot be empty")
 	}
-	
+
 	if product.Price < 0 {
 		return errors.New("product price cannot be negative")
 	}
-	
+
 	if product.Quantity < 0 {
 		return errors.New("product quantity cannot be negative")
 	}
-	
+
 	if _, exists := inv.products[product.ID]; exists {
 		return errors.New("product already exists")
 	}
-	
+
 	inv.products[product.ID] = &Product{
 		ID:       product.ID,
 		Name:     product.Name,
 		Price:    product.Price,
 		Quantity: product.Quantity,
 	}
-	
+
 	return nil
 }
 
@@ -641,11 +642,11 @@ func (inv *Inventory) UpdateStock(productID string, quantity int) error {
 	if !exists {
 		return errors.New("product not found")
 	}
-	
+
 	if quantity < 0 {
 		return errors.New("quantity cannot be negative")
 	}
-	
+
 	product.Quantity = quantity
 	return nil
 }
@@ -655,7 +656,7 @@ func (inv *Inventory) GetProduct(productID string) (*Product, error) {
 	if !exists {
 		return nil, errors.New("product not found")
 	}
-	
+
 	// Retornar copia para evitar modificaciones externas
 	return &Product{
 		ID:       product.ID,
@@ -672,24 +673,24 @@ func (inv *Inventory) ProcessOrder(order Order) error {
 		if !exists {
 			return fmt.Errorf("product %s not found", productID)
 		}
-		
+
 		if product.Quantity < quantity {
-			return fmt.Errorf("insufficient stock for product %s: have %d, need %d", 
+			return fmt.Errorf("insufficient stock for product %s: have %d, need %d",
 				productID, product.Quantity, quantity)
 		}
 	}
-	
+
 	// Actualizar stock
 	for productID, quantity := range order.Products {
 		inv.products[productID].Quantity -= quantity
 	}
-	
+
 	return nil
 }
 
 func (inv *Inventory) GetLowStockProducts(threshold int) []Product {
 	var lowStockProducts []Product
-	
+
 	for _, product := range inv.products {
 		if product.Quantity <= threshold {
 			lowStockProducts = append(lowStockProducts, Product{
@@ -700,7 +701,7 @@ func (inv *Inventory) GetLowStockProducts(threshold int) []Product {
 			})
 		}
 	}
-	
+
 	return lowStockProducts
 }
 
@@ -741,11 +742,11 @@ func (as *AuthService) RegisterUser(username, password string) error {
 	if username == "" || password == "" {
 		return errors.New("username and password cannot be empty")
 	}
-	
+
 	if _, exists := as.users[username]; exists {
 		return errors.New("user already exists")
 	}
-	
+
 	as.users[username] = password
 	return nil
 }
@@ -755,29 +756,29 @@ func (as *AuthService) Login(request LoginRequest) (*Token, error) {
 	if !exists {
 		return nil, errors.New("user not found")
 	}
-	
+
 	if password != request.Password {
 		return nil, errors.New("invalid password")
 	}
-	
+
 	// Generar tokens
 	accessToken, err := generateToken()
 	if err != nil {
 		return nil, err
 	}
-	
+
 	refreshToken, err := generateToken()
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Almacenar token data
 	as.tokens[accessToken] = TokenData{
 		Username:  request.Username,
 		ExpiresAt: time.Now().Add(1 * time.Hour),
 		IsValid:   true,
 	}
-	
+
 	return &Token{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
@@ -790,32 +791,32 @@ func (as *AuthService) ValidateToken(token string) (bool, error) {
 	if !exists {
 		return false, nil
 	}
-	
+
 	if !tokenData.IsValid {
 		return false, nil
 	}
-	
+
 	if time.Now().After(tokenData.ExpiresAt) {
 		return false, nil
 	}
-	
+
 	return true, nil
 }
 
 func (as *AuthService) RefreshToken(refreshToken string) (*Token, error) {
 	// En una implementación real, validaríamos el refresh token
 	// Por simplicidad, asumimos que el refresh token es válido
-	
+
 	newAccessToken, err := generateToken()
 	if err != nil {
 		return nil, err
 	}
-	
+
 	newRefreshToken, err := generateToken()
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &Token{
 		AccessToken:  newAccessToken,
 		RefreshToken: newRefreshToken,
@@ -828,7 +829,7 @@ func (as *AuthService) Logout(token string) error {
 	if !exists {
 		return errors.New("invalid token")
 	}
-	
+
 	tokenData.IsValid = false
 	as.tokens[token] = tokenData
 	return nil

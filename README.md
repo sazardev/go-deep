@@ -103,22 +103,22 @@ mindmap
 ### 🌳 **[Nivel 3: Avanzado](./03-avanzado/)**
 *Arquitectura y sistemas distribuidos*
 
-| Lección | Tema                                                                       | Estado     | Tiempo |
-| ------- | -------------------------------------------------------------------------- | ---------- | ------ |
-| 01      | [🚀 Performance Optimization](./03-avanzado/01-performance-optimization/)   | ✅ Completa | 12h    |
-| 02      | [🧠 Memory Management](./03-avanzado/02-memory-management/)                 | ✅ Completa | 8h     |
-| 03      | [🔍 Profiling & Debugging](./03-avanzado/03-profiling-debugging/)           | 📋 Planeado | 8h     |
-| 04      | [🎨 Design Patterns](./03-avanzado/04-design-patterns/)                     | 📋 Planeado | 10h    |
-| 05      | [🏗️ Architecture Patterns](./03-avanzado/05-architecture-patterns/)         | 📋 Planeado | 12h    |
-| 06      | [🔧 Microservices](./03-avanzado/06-microservices/)                         | 📋 Planeado | 16h    |
-| 07      | [📡 gRPC](./03-avanzado/07-grpc/)                                           | 📋 Planeado | 8h     |
-| 08      | [📮 Message Queues](./03-avanzado/08-message-queues/)                       | 📋 Planeado | 8h     |
-| 09      | [⚡ Caching Strategies](./03-avanzado/09-caching-strategies/)               | 📋 Planeado | 6h     |
-| 10      | [🔐 Security](./03-avanzado/10-security/)                                   | 📋 Planeado | 10h    |
-| 11      | [📊 Monitoring & Observability](./03-avanzado/11-monitoring-observability/) | 📋 Planeado | 8h     |
-| 12      | [🚀 Deployment](./03-avanzado/12-deployment/)                               | 📋 Planeado | 8h     |
-| 13      | [⌨️ CLI Tools](./03-avanzado/13-cli-tools/)                                 | 📋 Planeado | 6h     |
-| 14      | [🔄 Code Generation](./03-avanzado/14-code-generation/)                     | 📋 Planeado | 8h     |
+| Lección | Tema                                                                       | Estado        | Tiempo |
+| ------- | -------------------------------------------------------------------------- | ------------- | ------ |
+| 01      | [🚀 Performance Optimization](./03-avanzado/01-performance-optimization/)   | ✅ Completa    | 12h    |
+| 02      | [🧠 Memory Management](./03-avanzado/02-memory-management/)                 | ✅ Completa    | 8h     |
+| 03      | [🔍 Profiling & Debugging](./03-avanzado/03-profiling-debugging/)           | ✅ Completa    | 8h     |
+| 04      | [🎨 Design Patterns](./03-avanzado/04-design-patterns/)                     | � En Progreso | 10h    |
+| 05      | [🏗️ Architecture Patterns](./03-avanzado/05-architecture-patterns/)         | 📋 Planeado    | 12h    |
+| 06      | [🔧 Microservices](./03-avanzado/06-microservices/)                         | 📋 Planeado    | 16h    |
+| 07      | [📡 gRPC](./03-avanzado/07-grpc/)                                           | 📋 Planeado    | 8h     |
+| 08      | [📮 Message Queues](./03-avanzado/08-message-queues/)                       | 📋 Planeado    | 8h     |
+| 09      | [⚡ Caching Strategies](./03-avanzado/09-caching-strategies/)               | 📋 Planeado    | 6h     |
+| 10      | [🔐 Security](./03-avanzado/10-security/)                                   | 📋 Planeado    | 10h    |
+| 11      | [📊 Monitoring & Observability](./03-avanzado/11-monitoring-observability/) | 📋 Planeado    | 8h     |
+| 12      | [🚀 Deployment](./03-avanzado/12-deployment/)                               | 📋 Planeado    | 8h     |
+| 13      | [⌨️ CLI Tools](./03-avanzado/13-cli-tools/)                                 | 📋 Planeado    | 6h     |
+| 14      | [🔄 Code Generation](./03-avanzado/14-code-generation/)                     | 📋 Planeado    | 8h     |
 
 ### 🚀 **[Nivel 4: Expert+](./04-expert-plus/)**
 *Internals y liderazgo técnico*

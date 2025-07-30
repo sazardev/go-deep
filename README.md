@@ -110,7 +110,7 @@ mindmap
 | 03      | [🔍 Profiling & Debugging](./03-avanzado/03-profiling-debugging/)           | ✅ Completa    | 8h     |
 | 04      | [🎨 Design Patterns](./03-avanzado/04-design-patterns/)                     | � En Progreso | 10h    |
 | 05      | [🏗️ Architecture Patterns](./03-avanzado/05-architecture-patterns/)         | 📋 Planeado    | 12h    |
-| 06      | [🔧 Microservices](./03-avanzado/06-microservices/)                         | 📋 Planeado    | 16h    |
+| 06      | [🔧 Microservices](./03-avanzado/06-microservices/)                         | ✅ Completa    | 16h    |
 | 07      | [📡 gRPC](./03-avanzado/07-grpc/)                                           | 📋 Planeado    | 8h     |
 | 08      | [📮 Message Queues](./03-avanzado/08-message-queues/)                       | 📋 Planeado    | 8h     |
 | 09      | [⚡ Caching Strategies](./03-avanzado/09-caching-strategies/)               | 📋 Planeado    | 6h     |

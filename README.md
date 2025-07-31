@@ -4,15 +4,15 @@
 [![Go Version](https://img.shields.io/badge/Go-1.24.5-00ADD8.svg)](https://golang.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![Last Updated](https://img.shields.io/badge/last%20updated-July%2028%2C%202025-green.svg)]()
-[![Progress](https://img.shields.io/badge/progress-38%25%20complete-brightgreen.svg)]()
+[![Last Updated](https://img.shields.io/badge/last%20updated-July%2030%2C%202025-green.svg)]()
+[![Progress](https://img.shields.io/badge/progress-46%25%20complete-brightgreen.svg)]()
 [![Status](https://img.shields.io/badge/status-production%20ready-success.svg)]()
 
 ## 🎯 ¿Qué es Go Deep?
 
 **Go Deep** es el curso más completo, detallado y exhaustivo de Go (Golang) jamás creado. Este repositorio te llevará desde los conceptos más básicos hasta convertirte en un experto senior+ capaz de diseñar sistemas distribuidos complejos, optimizar performance a nivel microsegundo, y liderar equipos técnicos.
 
-**🎉 Estado Actual**: Con **17 lecciones completas en Fundamentos**, **6 lecciones avanzadas en Intermedio**, y **2 lecciones de nivel Avanzado**, ya tienes acceso a más de **158 horas** de contenido de calidad profesional. ¡El proyecto sigue creciendo!
+**🎉 Estado Actual**: Con **17 lecciones completas en Fundamentos**, **6 lecciones avanzadas en Intermedio**, y **5 lecciones de nivel Avanzado**, ya tienes acceso a más de **216 horas** de contenido de calidad profesional. ¡El proyecto sigue creciendo!
 
 ### 🌟 ¿Por qué este curso es diferente?
 
@@ -111,7 +111,7 @@ mindmap
 | 04      | [🎨 Design Patterns](./03-avanzado/04-design-patterns/)                     | � En Progreso | 10h    |
 | 05      | [🏗️ Architecture Patterns](./03-avanzado/05-architecture-patterns/)         | 📋 Planeado    | 12h    |
 | 06      | [🔧 Microservices](./03-avanzado/06-microservices/)                         | ✅ Completa    | 16h    |
-| 07      | [📡 gRPC](./03-avanzado/07-grpc/)                                           | 📋 Planeado    | 8h     |
+| 07      | [📡 gRPC](./03-avanzado/07-grpc/)                                           | ✅ Completa    | 12h    |
 | 08      | [📮 Message Queues](./03-avanzado/08-message-queues/)                       | 📋 Planeado    | 8h     |
 | 09      | [⚡ Caching Strategies](./03-avanzado/09-caching-strategies/)               | 📋 Planeado    | 6h     |
 | 10      | [🔐 Security](./03-avanzado/10-security/)                                   | 📋 Planeado    | 10h    |
@@ -366,9 +366,9 @@ graph TB
 
 ```mermaid
 pie title Distribución del Contenido
-    "✅ Completado" : 138
+    "✅ Completado" : 170
     "🚧 En Desarrollo" : 50
-    "📋 Planeado" : 312
+    "📋 Planeado" : 280
 ```
 
 ### 📈 **Métricas de Calidad**
@@ -433,11 +433,11 @@ graph TB
 
 | Nivel             | Lecciones | Completadas | Progreso | Horas    | Ejemplos | Ejercicios | Proyectos |
 | ----------------- | --------- | ----------- | -------- | -------- | -------- | ---------- | --------- |
-| 🌱 **Fundamentos** | 17        | 17          | **100%** | 92h      | 340+     | 85+        | 12        |
-| 🌿 **Intermedio**  | 17        | 6           | **35%**  | 46h      | 180+     | 45+        | 4         |
-| 🌳 **Avanzado**    | 14        | 2           | **14%**  | 20h      | 50+      | 15+        | 2         |
+| 🌱 **Fundamentos** | 17        | 17          | **100%** | 104h     | 340+     | 85+        | 12        |
+| 🌿 **Intermedio**  | 17        | 6           | **35%**  | 56h      | 180+     | 45+        | 4         |
+| 🌳 **Avanzado**    | 14        | 5           | **36%**  | 56h      | 120+     | 35+        | 5         |
 | 🚀 **Expert+**     | 13        | 0           | **0%**   | 0h       | 0        | 0          | 0         |
-| **🎯 TOTAL**       | **61**    | **25**      | **41%**  | **158h** | **570+** | **145+**   | **18**    |
+| **🎯 TOTAL**       | **61**    | **28**      | **46%**  | **216h** | **640+** | **165+**   | **21**    |
 
 ### � **Hitos Importantes Alcanzados**
 

@@ -5,14 +5,14 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Last Updated](https://img.shields.io/badge/last%20updated-July%2030%2C%202025-green.svg)]()
-[![Progress](https://img.shields.io/badge/progress-46%25%20complete-brightgreen.svg)]()
+[![Progress](https://img.shields.io/badge/progress-48%25%20complete-brightgreen.svg)]()
 [![Status](https://img.shields.io/badge/status-production%20ready-success.svg)]()
 
 ## 🎯 ¿Qué es Go Deep?
 
 **Go Deep** es el curso más completo, detallado y exhaustivo de Go (Golang) jamás creado. Este repositorio te llevará desde los conceptos más básicos hasta convertirte en un experto senior+ capaz de diseñar sistemas distribuidos complejos, optimizar performance a nivel microsegundo, y liderar equipos técnicos.
 
-**🎉 Estado Actual**: Con **17 lecciones completas en Fundamentos**, **6 lecciones avanzadas en Intermedio**, y **5 lecciones de nivel Avanzado**, ya tienes acceso a más de **216 horas** de contenido de calidad profesional. ¡El proyecto sigue creciendo!
+**🎉 Estado Actual**: Con **17 lecciones completas en Fundamentos**, **6 lecciones avanzadas en Intermedio**, y **6 lecciones de nivel Avanzado**, ya tienes acceso a más de **224 horas** de contenido de calidad profesional. ¡El proyecto sigue creciendo!
 
 ### 🌟 ¿Por qué este curso es diferente?
 
@@ -112,7 +112,7 @@ mindmap
 | 05      | [🏗️ Architecture Patterns](./03-avanzado/05-architecture-patterns/)         | 📋 Planeado    | 12h    |
 | 06      | [🔧 Microservices](./03-avanzado/06-microservices/)                         | ✅ Completa    | 16h    |
 | 07      | [📡 gRPC](./03-avanzado/07-grpc/)                                           | ✅ Completa    | 12h    |
-| 08      | [📮 Message Queues](./03-avanzado/08-message-queues/)                       | 📋 Planeado    | 8h     |
+| 08      | [📮 Message Queues](./03-avanzado/08-message-queues/)                       | ✅ Completa    | 8h     |
 | 09      | [⚡ Caching Strategies](./03-avanzado/09-caching-strategies/)               | 📋 Planeado    | 6h     |
 | 10      | [🔐 Security](./03-avanzado/10-security/)                                   | 📋 Planeado    | 10h    |
 | 11      | [📊 Monitoring & Observability](./03-avanzado/11-monitoring-observability/) | 📋 Planeado    | 8h     |
@@ -435,9 +435,9 @@ graph TB
 | ----------------- | --------- | ----------- | -------- | -------- | -------- | ---------- | --------- |
 | 🌱 **Fundamentos** | 17        | 17          | **100%** | 104h     | 340+     | 85+        | 12        |
 | 🌿 **Intermedio**  | 17        | 6           | **35%**  | 56h      | 180+     | 45+        | 4         |
-| 🌳 **Avanzado**    | 14        | 5           | **36%**  | 56h      | 120+     | 35+        | 5         |
+| 🌳 **Avanzado**    | 14        | 6           | **43%**  | 64h      | 140+     | 40+        | 6         |
 | 🚀 **Expert+**     | 13        | 0           | **0%**   | 0h       | 0        | 0          | 0         |
-| **🎯 TOTAL**       | **61**    | **28**      | **46%**  | **216h** | **640+** | **165+**   | **21**    |
+| **🎯 TOTAL**       | **61**    | **29**      | **48%**  | **224h** | **660+** | **170+**   | **22**    |
 
 ### � **Hitos Importantes Alcanzados**
 
